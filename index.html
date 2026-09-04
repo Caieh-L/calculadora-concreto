@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Traço Engenharia Brasil v5</title>
+  <title>Calculadora de Traço Engenharia Brasil v5.1</title>
   <style>
     * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
     body { background-color: #0f172a; padding: 15px; display: flex; justify-content: center; color: #334155; }
@@ -122,7 +122,7 @@
     <div class="item" id="linhaPedraLataPorSaco">Brita/Seixo (Latas de 18L): <span class="bold" id="rPedraLataPorSaco">0 latas</span></div>
     <div class="item" style="background: #f0fdf4; padding: 6px; border-radius: 6px;">Água Limpa a Adicionar: <span class="bold" id="rAguaPorSaco" style="color:#15803d;">0 Litros</span></div>
 
-    <h2>📐 Traço Proporcional em Volume</h2>
+    <h2>📐 Traço Proporcional em Volume (Latas)</h2>
     <div class="item">Proporção (Cimento : Areia : Pedra): <span class="bold" id="rProporcao">1 : 0 : 0</span></div>
   </div>
 </div>
@@ -277,15 +277,20 @@ function executarDosagemCientifica() {
   const linhaPedraM3 = document.getElementById('linhaPedraM3');
   const linhaPedraLataPorSaco = document.getElementById('linhaPedraLataPorSaco');
 
+  // Conversão de 1 saco de cimento (50kg) para volume equivalente em latas de 18L (~2.2 latas de 18L)
+  const latasCimentoPorSaco = 2.2;
+  let trazoAreiaLata = latasAreiaPorSaco / latasCimentoPorSaco;
+  let trazoPedraLata = latasPedraPorSaco / latasCimentoPorSaco;
+
   if (tipoAgregado === 'misto') {
     linhaPedraM3.style.display = 'none';
     linhaPedraLataPorSaco.style.display = 'none';
-    document.getElementById('rProporcao').innerText = `1 : ${latasAreiaPorSaco.toFixed(1)} (Seixo Misto)`;
+    document.getElementById('rProporcao').innerText = `1 : ${trazoAreiaLata.toFixed(1)} (Seixo Misto)`;
   } else {
     linhaPedraM3.style.display = 'flex';
     linhaPedraLataPorSaco.style.display = 'flex';
     document.getElementById('rPedraM3').innerText = `${(volumePedraLitros / 1000).toFixed(2)} m³ (${latasPedraTotal.toFixed(0)} latas)`;
-    document.getElementById('rProporcao').innerText = `1 : ${latasAreiaPorSaco.toFixed(1)} : ${latasPedraPorSaco.toFixed(1)}`;
+    document.getElementById('rProporcao').innerText = `1 : ${trazoAreiaLata.toFixed(1)} : ${trazoPedraLata.toFixed(1)}`;
   }
 
   document.getElementById('rAreiaLataPorSaco').innerText = `${latasAreiaPorSaco.toFixed(1)} latas`;
