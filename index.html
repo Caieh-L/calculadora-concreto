@@ -3,115 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Traço Brasil V2</title>
+    <title>Calculadora de Traço Engenharia Brasil</title>
     <style>
         * { box-sizing: border-box; font-family: sans-serif; margin: 0; padding: 0; }
-        body { background-color: #f0f2f5; padding: 20px; display: flex; justify-content: center; }
-        .card { background: white; width: 100%; max-width: 450px; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #1e293b; font-size: 20px; margin-bottom: 15px; }
-        h3 { font-size: 14px; color: #64748b; margin: 10px 0 5px 0; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; }
+        body { background-color: #0f172a; padding: 15px; display: flex; justify-content: center; color: #334155; }
+        .card { background: white; width: 100%; max-width: 480px; padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        h1 { text-align: center; color: #1e293b; font-size: 22px; margin-bottom: 5px; font-weight: 800; }
+        .subtitle { text-align: center; font-size: 12px; color: #64748b; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+        h3 { font-size: 13px; color: #1e293b; margin: 14px 0 6px 0; font-weight: 700; text-transform: uppercase; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; background: #fff; color: #1e293b; outline: none; }
+        input:focus, select:focus { border-color: #0284c7; }
         .row { display: flex; gap: 10px; }
-        button { width: 100%; background-color: #059669; color: white; border: none; padding: 14px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .results { margin-top: 20px; padding: 15px; background-color: #ecfdf5; border-left: 4px solid #059669; border-radius: 4px; display: none; }
-        .item { font-size: 15px; margin-bottom: 6px; display: flex; justify-content: space-between; }
-        .bold { font-weight: bold; color: #065f46; }
-        .alert { font-size: 12px; color: #b45309; background-color: #fffbeb; padding: 8px; border-radius: 4px; margin-top: 5px; border-left: 3px solid #f59e0b; }
+        button { width: 100%; background-color: #0284c7; color: white; border: none; padding: 16px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 6px rgba(2, 132, 199, 0.2); transition: 0.2s; }
+        button:hover { background-color: #0369a1; }
+        .results { margin-top: 25px; padding: 18px; background-color: #f8fafc; border: 2px solid #e2e8f0; border-top: 5px solid #0284c7; border-radius: 8px; display: none; }
+        .results h2 { font-size: 15px; color: #0f172a; margin-bottom: 12px; text-align: center; font-weight: 800; }
+        .item { font-size: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px; align-items: center; }
+        .bold { font-weight: 800; color: #0284c7; font-size: 16px; }
+        .alert { font-size: 12px; color: #b45309; background-color: #fffbeb; padding: 12px; border-radius: 8px; margin-top: 5px; border-left: 4px solid #f59e0b; line-height: 1.4; font-weight: 500; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h1>🧮 Calculadora de Traço Brasil</h1>
+    <h1>🧮 Dosagem Científica</h1>
+    <div class="subtitle">Padrão NBR 12655 / ABCP</div>
     
-    <h3>1. Materiais</h3>
-    <label style="font-size:12px; font-weight:bold; color:#64748b;">Agregado Graúdo:</label>
-    <select id="tipoAgregado" onchange="ajustarCampos()">
-        <option value="brita">Brita Comercial</option>
-        <option value="seixo">Seixo Rolado</option>
-        <option value="misto">Seixo Misto (Já vem misturado)</option>
+    <h3>1. Finalidade (Aplica fck + Margem de Segurança)</h3>
+    <select id="finalidadeObra" onchange="atualizarInstrucoes()">
+        <option value="rampa">Rampa de Garagem / Calçada de Carro (Firme - 25MPa)</option>
+        <option value="laje">Lajes, Vigas e Pilares Residenciais (Padrão - 25MPa)</option>
+        <option value="fundacao">Fundações, Valas e Contrapisos (Estrutura Leve - 15MPa)</option>
+        <option value="predio">Pilares e Estruturas Altas (Fluido - 30MPa)</option>
+    </select>
+    <div id="dicaFinalidade" class="alert">💡 Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.</div>
+
+    <h3>2. Agregados Regionais</h3>
+    <div class="row">
+        <select id="tipoAgregado">
+            <option value="brita">Brita Comercial</option>
+            <option value="seixo">Seixo Rolado</option>
+            <option value="misto">Seixo Misto (Rio)</option>
+        </select>
+        <select id="tamanhoPedra">
+            <option value="0">Brita 0 (Pedrisco)</option>
+            <option value="1" selected>Brita 1 (Lajes/Vigas)</option>
+            <option value="2">Brita 2 (Pisos/Fundações)</option>
+        </select>
+    </div>
+
+    <h3>3. Tipo de Cimento Nacional</h3>
+    <select id="tipoCimento">
+        <option value="cp2">Cimento CP II (Composto - Uso Geral)</option>
+        <option value="cp3">Cimento CP III (Alto Forno - Cura Lenta)</option>
+        <option value="cp4">Cimento CP IV (Pozolânico - Durabilidade)</option>
+        <option value="cp5">Cimento CP V-ARI (Alta Resistência Inicial)</option>
     </select>
 
-    <label style="font-size:12px; font-weight:bold; color:#64748b;">Tipo de Cimento Portland:</label>
-    <select id="tipoCimento" onchange="mostrarAvisoCimento()">
-        <option value="cp2">CP II (Composto - Padrão)</option>
-        <option value="cp3">CP III (Alto Forno/Escória)</option>
-        <option value="cp4">CP IV (Pozolânico)</option>
-        <option value="cp5">CP V-ARI (Alta Resistência Inicial)</option>
-    </select>
-    <div id="avisoCimento" class="alert" style="display:none;"></div>
-
-    <h3>2. Aditivo Plastificante</h3>
+    <h3>4. Aditivos de Performance</h3>
     <select id="usaAditivo" onchange="ajustarAditivo()">
-        <option value="nao">Não usar aditivo</option>
-        <option value="sim">Usar Aditivo Plastificante</option>
+        <option value="nao">Sem Aditivo Plastificante</option>
+        <option value="sim">Com Aditivo Plastificante (Redutor de Água)</option>
     </select>
     <div id="campoDosagemAditivo" style="display:none;">
-        <label style="font-size:12px; font-weight:bold; color:#64748b;">Dosagem (% do peso do cimento. Ex: 0.5):</label>
-        <input type="number" id="dosagemAditivo" value="0.5" step="0.1">
+        <input type="number" id="dosagemAditivo" value="0.5" step="0.1" placeholder="Dosagem % (Ex: 0.5)">
     </div>
 
-    <h3>3. Volume e Perda</h3>
+    <h3>5. Cubagem e Perda Real</h3>
     <div class="row">
-        <input type="number" id="volume" placeholder="Volume m³" value="1">
-        <input type="number" id="perda" placeholder="Perda %" value="5">
+        <input type="number" id="volume" placeholder="Volume m³" value="1" step="0.1">
+        <select id="perdaObra">
+            <option value="5">5% Perda (Calhas/Carrinho)</option>
+            <option value="10" selected>10% Perda (Solo/Regularização)</option>
+            <option value="15">15% Perda (Alta variação)</option>
+        </select>
     </div>
 
-    <h3>4. Proporção do Traço (Cimento : Areia : Pedra)</h3>
-    <div class="row">
-        <input type="number" value="1" disabled style="background:#f1f5f9; text-align:center;">
-        <input type="number" id="tracoAreia" placeholder="Areia" value="2">
-        <input type="number" id="tracoPedra" placeholder="Pedra/Seixo" value="3">
-    </div>
+    <h3>6. Estado da Areia no Canteiro</h3>
+    <select id="umidadeAreia">
+        <option value="seca">☀️ Totalmente Seca (Pilha protegida)</option>
+        <option value="umida" selected>☁️ Úmida / Normal (Exposta ao tempo em dia limpo)</option>
+        <option value="molhada">🌧️ Encharcada (Pós-chuva recente / Fundo da pilha)</option>
+    </select>
 
-    <h3>5. Água e Umidade da Areia</h3>
-    <div class="row">
-        <input type="number" id="fc" placeholder="Água/Cimento" value="0.55" step="0.01">
-        <input type="number" id="umidade" placeholder="Umidade Areia %" value="0">
-    </div>
-
-    <button onclick="calcularObra()">Calcular Traço</button>
+    <button onclick="executarDosagemCientifica()">Calcular Traço Assertivo</button>
 
     <div class="results" id="caixaResultado">
-        <div class="item">Sacos de Cimento (50kg): <span class="bold" id="rCimento">0</span></div>
-        <div class="item" id="linhaAditivo" style="display:none; background:#fef3c7; padding:4px; border-radius:4px;">Aditivo Plastificante: <span class="bold" id="rAditivo" style="color:#b45309;">0 ml</span></div>
-        <div class="item">Latas de Areia (18L): <span class="bold" id="rAreia">0</span></div>
-        <div class="item" id="linhaPedra">Latas de Pedra (18L): <span class="bold" id="rPedra">0</span></div>
-        <div class="item">Água para colocar (Litros): <span class="bold" id="rAgua">0</span></div>
+        <h2>📋 RECEITA DO CONCRETO (VOLUME TOTAL):</h2>
+        <div class="item">Cimento (Sacos de 50kg): <span class="bold" id="rCimento">0</span></div>
+        <div class="item" id="linhaAditivo" style="display:none; background:#fffbeb; padding:6px; border-radius:6px; border: 1px solid #fef08a;">Aditivo Líquido: <span class="bold" id="rAditivo" style="color:#b45309;">0 ml</span></div>
+        <div class="item">Areia Lavada (Latas de 18L): <span class="bold" id="rAreia">0</span></div>
+        <div class="item" id="linhaPedra">Agregado Graúdo (Latas de 18L): <span class="bold" id="rPedra">0</span></div>
+        <div class="item" style="background: #f0fdf4; padding: 6px; border-radius: 6px; border: 1px solid #bbf7d0;">Água Limpa a Colocar: <span class="bold" id="rAgua" style="color:#15803d;">0 Litros</span></div>
     </div>
 </div>
 
 <script>
-function mostrarAvisoCimento() {
-    const cimento = document.getElementById('tipoCimento').value;
-    const aviso = document.getElementById('avisoCimento');
-    
-    if(cimento === 'cp3') {
-        aviso.innerText = "ℹ️ CP III: Liberação de calor lenta. Exige manter molhado (cura) por mais dias.";
-        aviso.style.display = 'block';
-    } else if(cimento === 'cp4') {
-        aviso.innerText = "ℹ️ CP IV: Alta durabilidade contra ataques químicos. Ganho de força mais lento.";
-        aviso.style.display = 'block';
-    } else if(cimento === 'cp5') {
-        aviso.innerText = "ℹ️ CP V-ARI: Ganha muita força nos primeiros dias. Cuidado com desforma rápida.";
-        aviso.style.display = 'block';
-    } else {
-        aviso.style.display = 'none';
-    }
-}
+const dicas = {
+    rampa: "💡 Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.",
+    laje: "💡 Estruturas de lajes e vigas exigem adensamento correto (vibrador ou barra) para evitar vazios de concretagem e bicheiras.",
+    fundacao: "💡 Concreto para valas e contrapisos leves. No chão, molhe bem a terra antes do lançamento para ela não roubar água do concreto.",
+    predio: "💡 Concreto fluido de alta resistência estrutural. Rigor máximo com a água! Nunca adicione água além do calculado na betoneira."
+};
 
-function ajustarCampos() {
-    const tipo = document.getElementById('tipoAgregado').value;
-    const campoPedra = document.getElementById('tracoPedra');
-    const linhaPedra = document.getElementById('linhaPedra');
-    
-    if (tipo === 'misto') {
-        campoPedra.style.display = 'none';
-        linhaPedra.style.display = 'none';
-    } else {
-        campoPedra.style.display = 'block';
-        linhaPedra.style.display = 'flex';
-    }
+function atualizarInstrucoes() {
+    const finalidade = document.getElementById('finalidadeObra').value;
+    document.getElementById('dicaFinalidade').innerText = dicas[finalidade];
 }
 
 function ajustarAditivo() {
@@ -119,96 +116,56 @@ function ajustarAditivo() {
     document.getElementById('campoDosagemAditivo').style.display = (usa === 'sim') ? 'block' : 'none';
 }
 
-function calcularObra() {
-    const tipo = document.getElementById('tipoAgregado').value;
+function executarDosagemCientifica() {
+    const finalidade = document.getElementById('finalidadeObra').value;
+    const tipoAgregado = document.getElementById('tipoAgregado').value;
+    const tamanhoPedra = document.getElementById('tamanhoPedra').value;
     const cimento = document.getElementById('tipoCimento').value;
     const usaAditivo = document.getElementById('usaAditivo').value;
+    const umidadeEstado = document.getElementById('umidadeAreia').value;
     let V = parseFloat(document.getElementById('volume').value) || 0;
-    const perda = parseFloat(document.getElementById('perda').value) || 0;
-    const m_areia = parseFloat(document.getElementById('tracoAreia').value) || 0;
-    let m_pedra = parseFloat(document.getElementById('tracoPedra').value) || 0;
-    let ac = parseFloat(document.getElementById('fc').value) || 0;
-    const h = (parseFloat(document.getElementById('umidade').value) || 0) / 100;
+    const perda = parseFloat(document.getElementById('perdaObra').value) || 0;
 
+    if (V <= 0) { alert("Digite um volume válido."); return; }
+
+    // Aplica margem normativa de perda volumétrica
     V = V * (1 + (perda / 100));
 
-    // Ajusta a Massa Específica baseada no tipo de cimento real do laboratório
-    let rho_ci = 3.10; // Padrão CP II
-    if (cimento === 'cp3') rho_ci = 2.95; // Mais leve devido à escória
-    if (cimento === 'cp4') rho_ci = 3.00; // Pozolânico
-    if (cimento === 'cp5') rho_ci = 3.15; // Finura maior/ARI
+    // 1. Definição Racional do Traço Base (Massa Seca) conforme fck + Segurança Normativa (+5.5 MPa)
+    let m_areia = 2.1;
+    let m_pedra = 3.1;
+    let ac = 0.53; // Alvo ~25MPa Real com margem de segurança (mira 30.5MPa de laboratório)
+
+    if (finalidade === 'rampa') { m_areia = 1.9; m_pedra = 2.8; ac = 0.48; } // Menos água para dar ponto e firmeza
+    if (finalidade === 'fundacao') { m_areia = 2.8; m_pedra = 3.8; ac = 0.62; } // Menos cimento (15MPa alvo 20.5)
+    if (finalidade === 'predio') { m_areia = 1.6; m_pedra = 2.4; ac = 0.43; } // Concreto Rico (30MPa alvo 35.5)
+
+    // Ajuste pelo tamanho da brita (Fator de Consumo de Água da ABCP)
+    // Britas menores possuem maior área superficial, demandando mais água/pasta
+    if (tamanhoPedra === '0') { ac += 0.03; m_areia += 0.1; } // Pedrisco pede mais pasta
+    if (tamanhoPedra === '2') { ac -= 0.02; m_pedra -= 0.1; } // Pedra grossa pede menos pasta
+
+    // 2. Banco de Dados Físicos de Materiais Nacionais (Massas específicas em kg/dm³)
+    let rho_ci = 3.11; // Média ABCP
+    if (cimento === 'cp3') rho_ci = 2.95;
+    if (cimento === 'cp4') rho_ci = 3.00;
+    if (cimento === 'cp5') rho_ci = 3.15;
 
     const rho_ar = 2.65;
     let rho_pe = 2.70; 
-    
-    if (tipo === 'seixo') rho_pe = 2.60;
-    if (tipo === 'misto') {
-        rho_pe = 2.63; 
-        m_pedra = 0; 
-    }
+    if (tipoAgregado === 'seixo') rho_pe = 2.60;
+    if (tipoAgregado === 'misto') { rho_pe = 2.63; m_areia = m_areia + m_pedra; m_pedra = 0; }
 
-    const gama_ar = 1.45;
-    let gama_pe = (tipo === 'seixo') ? 1.50 : 1.40;
+    // Massas unitárias aparentes para conversão em volume de canteiro (kg/L)
+    const gama_ar = 1.42;
+    let gama_pe = (tipoAgregado === 'seixo') ? 1.52 : 1.38;
 
+    // 3. Modelagem Física de Umidade e Inchamento Estocástico da Areia
+    let h = 0.0;
     let inchamento = 1.0;
-    if (h > 0) inchamento = 1.25; 
 
-    // Regra de engenharia do Aditivo Plastificante:
-    // Ele reduz a necessidade de água da betoneira mantendo a mesma força do cimento!
+    if (umidadeEstado === 'umida') { h = 0.04; inchamento = 1.26; } // Areia média padrão brasileira úmida
+    if (umidadeEstado === 'molhada') { h = 0.08; inchamento = 1.16; } // Saturação reduz efeito do inchamento
+
+    // 4. Redução Química de Água por Aditivo Plastificante
     let fatorReducaoAgua = 1.0;
-    if (usaAditivo === 'sim') {
-        fatorReducaoAgua = 0.88; // Reduz em média 12% da água necessária
-    }
-
-    const agua_projeto_m3 = ac * fatorReducaoAgua;
-
-    // Fórmula Universal do Volume Absoluto recalculada com os novos pesos e água reduzida
-    const vol_especifico = (1 / rho_ci) + (m_areia / rho_ar) + (m_pedra / rho_pe) + agua_projeto_m3;
-    const cimento_por_m3 = 1000 / vol_especifico;
-
-    const peso_ci = cimento_por_m3 * V;
-    let peso_ar = peso_ci * m_areia;
-    const peso_pe = peso_ci * m_pedra;
-
-    let agua_na_areia = 0;
-    if (h > 0) {
-        agua_na_areia = peso_ar * h;
-        peso_ar = peso_ar * (1 + h);
-    }
-
-    // Calcula a água total limpa a ser adicionada
-    const agua_real = Math.max(0, (peso_ci * agua_projeto_m3) - agua_na_areia);
-
-    // Calcula a dosagem do aditivo em ml (baseado no peso do cimento)
-    let ml_aditivo = 0;
-    if (usaAditivo === 'sim') {
-        const pct_adit = parseFloat(document.getElementById('dosagemAditivo').value) || 0.5;
-        ml_aditivo = peso_ci * (pct_adit / 100) * 1000; // converte kg para ml
-    }
-
-    const sacos = peso_ci / 50;
-    const latas_areia = ((peso_ar / gama_ar) / 18) * inchamento;
-    const latas_pedra = (peso_pe / gama_pe) / 18;
-
-    // Joga os resultados na tela
-    document.getElementById('rCimento').innerText = sacos.toFixed(1) + " sc";
-    document.getElementById('rAreia').innerText = latas_areia.toFixed(1) + " latas";
-    if (tipo !== 'misto') {
-        document.getElementById('rPedra').innerText = latas_pedra.toFixed(1) + " latas";
-    }
-    document.getElementById('rAgua').innerText = agua_real.toFixed(0) + " Litros";
-
-    // Mostra ou esconde a linha do aditivo nos resultados
-    if (usaAditivo === 'sim') {
-        document.getElementById('rAditivo').innerText = ml_aditivo.toFixed(0) + " ml";
-        document.getElementById('linhaAditivo').style.display = 'flex';
-    } else {
-        document.getElementById('linhaAditivo').style.display = 'none';
-    }
-
-    document.getElementById('caixaResultado').style.display = 'block';
-}
-</script>
-
-</body>
-</html>
