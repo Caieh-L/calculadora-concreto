@@ -30,7 +30,7 @@
  
  <h3>1. Finalidade da Concretagem</h3>
  <select id="finalidadeObra">
- <option value="rampa">Rampa de Garagem / Calçada de Carro (25MPa)</option>
+ <option value="rampa" selected>Rampa de Garagem / Calçada de Carro (25MPa)</option>
  <option value="laje">Lajes Comuns e Vigas Aéreas (25MPa)</option>
  <option value="pilar">Pilares e Paredes de Concreto Estrutural (30MPa)</option>
  <option value="calcada">Calçadas de Pedestre e Pisos de Quintal (20MPa)</option>
@@ -38,7 +38,9 @@
  <option value="baldrame">Vigas de Fundação / Baldrames e Blocos (25MPa)</option>
  <option value="magro">Concreto Magro / Lastro de Proteção (15MPa)</option>
  </select>
- <div id="dicaFinalidade" class="alert">💡 Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.</div>
+ 
+ <!-- Caixa amarela estruturada para evitar quebra de nós no DOM -->
+ <div id="dicaFinalidade" class="alert">💡 <span id="textoDica">Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.</span></div>
  
  <h3>2. Agregados Regionais</h3>
  <div class="row">
@@ -102,20 +104,20 @@
 
 <script>
 const dicas = {
- rampa: "💡 Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.",
- laje: "💡 Lajes e vigas aéreas exigem adensamento correto (vibrador ou barra) e cura molhada constante por no mínimo 7 dias para evitar fissuras de retração.",
- pilar: "💡 Pilares exigem concreto mais fluido devido à altura. Jogue o concreto em camadas de no máximo 50cm e use vibrador para não dar bicheira no fundo.",
- calcada: "💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros. Sem as juntas, o concreto quebra sozinho com a variação do sol e calor.",
- arrimo: "💡 Muros de arrimo exigem alta impermeabilidade e proteção. Não economize no cimento aqui para evitar que a umidade da terra destrua a estrutura.",
- baldrame: "💡 Concreto em contato direto com o solo. Molhe bem a vala antes de lançar o concreto para a terra não roubar a água da betoneira.",
- magro: "💡 Lastro de proteção. Serve apenas para regularizar o solo e proteger as armaduras de ferro do contato direto com a terra úmida."
+ rampa: "Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.",
+ laje: "Lajes e vigas aéreas exigem adensamento correto (vibrador ou barra) e cura molhada constante por no mínimo 7 dias para evitar fissuras de retração.",
+ pilar: "Pilares exigem concreto mais fluido devido à altura. Jogue o concreto em camadas de no máximo 50cm e use vibrador para não dar bicheira no fundo.",
+ calcada: "Calçadas e quintais exigem juntas de dilatação a cada 2 metros. Sem as juntas, o concreto quebra sozinho com a variação do sol e calor.",
+ arrimo: "Muros de arrimo exigem alta impermeabilidade e proteção. Não economize no cimento aqui para evitar que a umidade da terra destrua a estrutura.",
+ baldrame: "Concreto em contato direto com o solo. Molhe bem a vala antes de lançar o concreto para a terra não roubar a água da betoneira.",
+ magro: "Lastro de proteção. Serve apenas para regularizar o solo e proteger as armaduras de ferro do contato direto com a terra úmida."
 };
 
 function atualizarInstrucoes() {
  const finalidade = document.getElementById('finalidadeObra').value;
- const elementoDica = document.getElementById('dicaFinalidade');
- if (elementoDica && dicas[finalidade]) {
- elementoDica.innerText = dicas[finalidade];
+ const elementoTexto = document.getElementById('textoDica');
+ if (elementoTexto && dicas[finalidade]) {
+ elementoTexto.innerText = dicas[finalidade];
  }
 }
 
@@ -141,7 +143,6 @@ function executarDosagemCientifica() {
  
  V = V * (1 + (perda / 100));
  
- // Configuração Automática de Traço Seco por finalidade (Massa)
  let m_areia = 2.1;
  let m_pedra = 3.1;
  let ac = 0.53; 
@@ -158,7 +159,7 @@ function executarDosagemCientifica() {
  if (tamanhoPedra === '2') { ac -= 0.02; m_pedra -= 0.1; } 
  
  if (usaAditivo === 'sim') {
- ac = ac * 0.88; // Redução padrão de 12% na água livre
+ ac = ac * 0.88; 
  }
 
  let rho_ci = 3.11; 
@@ -178,19 +179,21 @@ function executarDosagemCientifica() {
  const gama_ar = 1.42;
  let gama_pe = (tipoAgregado === 'seixo') ? 1.52 : 1.38;
  
- // Correção de Umidade e Inchamento do canteiro
  let h = 0.0;
  let ia = 1.0;
  if (umidadeEstado === 'umida') { h = 0.04; ia = 1.25; }
  if (umidadeEstado === 'molhada') { h = 0.08; ia = 1.30; }
 
- // Densidade Absoluta do Traço para achar consumo de cimento por m³
  let volumeUnitarioSeco = (1 / rho_ci) + (m_areia / rho_ar) + (m_pedra / rho_pe) + ac;
  let consumoCimentoM3 = 1000 / volumeUnitarioSeco;
  
- // Total de cimento em sacos
  let cimentoTotalKg = consumoCimentoM3 * V;
  let sacosCimento = cimentoTotalKg / 50;
  
- // Cálculo de Materiais em Massa Seca Total
  let pesoCimentoTotal = cimentoTotalKg;
+ let pesoAreiaSecaTotal = pesoCimentoTotal * m_areia;
+ let pesoPedraTotal = pesoCimentoTotal * m_pedra;
+ 
+ let aguaNaAreia = pesoAreiaSecaTotal * h;
+ let aguaEfetivaTotal = (pesoCimentoTotal * ac) - aguaNaAreia;
+ if (aguaEfetivaTotal < 5) aguaEfetivaTotal = 5;
