@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Traço Engenharia Brasil</title>
+    <title>Calculadora de Traço Engenharia Brasil v4</title>
     <style>
         * { box-sizing: border-box; font-family: sans-serif; margin: 0; padding: 0; }
         body { background-color: #0f172a; padding: 15px; display: flex; justify-content: center; color: #334155; }
@@ -29,12 +29,15 @@
     <h1>🧮 Dosagem Científica</h1>
     <div class="subtitle">Padrão NBR 12655 / ABCP</div>
     
-    <h3>1. Finalidade (Aplica fck + Margem de Segurança)</h3>
+    <h3>1. Finalidade da Concretagem</h3>
     <select id="finalidadeObra" onchange="atualizarInstrucoes()">
-        <option value="rampa">Rampa de Garagem / Calçada de Carro (Firme - 25MPa)</option>
-        <option value="laje">Lajes, Vigas e Pilares Residenciais (Padrão - 25MPa)</option>
-        <option value="fundacao">Fundações, Valas e Contrapisos (Estrutura Leve - 15MPa)</option>
-        <option value="predio">Pilares e Estruturas Altas (Fluido - 30MPa)</option>
+        <option value="rampa">Rampa de Garagem / Calçada de Carro (25MPa)</option>
+        <option value="laje">Lajes Comuns e Vigas Aéreas (25MPa)</option>
+        <option value="pilar">Pilares e Paredes de Concreto Estrutural (30MPa)</option>
+        <option value="calcada">Calçadas de Pedestre e Pisos de Quintal (20MPa)</option>
+        <option value="arrimo">Muros de Arrimo e Contenções de Terra (30MPa)</option>
+        <option value="baldrame">Vigas de Fundação / Baldrames e Blocos (25MPa)</option>
+        <option value="magro">Concreto Magro / Lastro de Proteção (15MPa)</option>
     </select>
     <div id="dicaFinalidade" class="alert">💡 Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.</div>
 
@@ -47,8 +50,8 @@
         </select>
         <select id="tamanhoPedra">
             <option value="0">Brita 0 (Pedrisco)</option>
-            <option value="1" selected>Brita 1 (Lajes/Vigas)</option>
-            <option value="2">Brita 2 (Pisos/Fundações)</option>
+            <option value="1" selected>Brita 1 (Padrão Geral)</option>
+            <option value="2">Brita 2 (Fundações/Pisos)</option>
         </select>
     </div>
 
@@ -82,8 +85,8 @@
     <h3>6. Estado da Areia no Canteiro</h3>
     <select id="umidadeAreia">
         <option value="seca">☀️ Totalmente Seca (Pilha protegida)</option>
-        <option value="umida" selected>☁️ Úmida / Normal (Exposta ao tempo em dia limpo)</option>
-        <option value="molhada">🌧️ Encharcada (Pós-chuva recente / Fundo da pilha)</option>
+        <option value="umida" selected>☁️ Úmida / Normal (Exposta ao tempo)</option>
+        <option value="molhada">🌧️ Encharcada (Pós-chuva / Fundo da pilha)</option>
     </select>
 
     <button onclick="executarDosagemCientifica()">Calcular Traço Assertivo</button>
@@ -101,9 +104,12 @@
 <script>
 const dicas = {
     rampa: "💡 Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.",
-    laje: "💡 Estruturas de lajes e vigas exigem adensamento correto (vibrador ou barra) para evitar vazios de concretagem e bicheiras.",
-    fundacao: "💡 Concreto para valas e contrapisos leves. No chão, molhe bem a terra antes do lançamento para ela não roubar água do concreto.",
-    predio: "💡 Concreto fluido de alta resistência estrutural. Rigor máximo com a água! Nunca adicione água além do calculado na betoneira."
+    laje: "💡 Lajes e vigas aéreas exigem adensamento correto (vibrador ou barra) e cura molhada constante por no mínimo 7 dias para evitar fissuras de retração.",
+    pilar: "💡 Pilares exigem concreto mais fluido devido à altura. Jogue o concreto em camadas de no máximo 50cm e use vibrador para não dar bicheira no fundo.",
+    calcada: "💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros. Sem as juntas, o concreto quebra sozinho com a variação do sol e calor.",
+    arrimo: "💡 Muros de arrimo exigem alta impermeabilidade e proteção. Não economize no cimento aqui para evitar que a umidade da terra destrua a estrutura.",
+    baldrame: "💡 Concreto em contato direto com o solo. Molhe bem a vala antes de lançar o concreto para a terra não roubar a água da betoneira.",
+    magro: "💡 Lastro de proteção. Serve apenas para regularizar o solo e proteger as armaduras de ferro do contato direto com a terra úmida."
 };
 
 function atualizarInstrucoes() {
@@ -128,25 +134,25 @@ function executarDosagemCientifica() {
 
     if (V <= 0) { alert("Digite um volume válido."); return; }
 
-    // Aplica margem normativa de perda volumétrica
     V = V * (1 + (perda / 100));
 
-    // 1. Definição Racional do Traço Base (Massa Seca) conforme fck + Segurança Normativa (+5.5 MPa)
+    // Configuração Automática de Traço Seco por finalidade (Massa)
     let m_areia = 2.1;
     let m_pedra = 3.1;
-    let ac = 0.53; // Alvo ~25MPa Real com margem de segurança (mira 30.5MPa de laboratório)
+    let ac = 0.53; 
 
-    if (finalidade === 'rampa') { m_areia = 1.9; m_pedra = 2.8; ac = 0.48; } // Menos água para dar ponto e firmeza
-    if (finalidade === 'fundacao') { m_areia = 2.8; m_pedra = 3.8; ac = 0.62; } // Menos cimento (15MPa alvo 20.5)
-    if (finalidade === 'predio') { m_areia = 1.6; m_pedra = 2.4; ac = 0.43; } // Concreto Rico (30MPa alvo 35.5)
+    if (finalidade === 'rampa') { m_areia = 1.9; m_pedra = 2.8; ac = 0.48; } 
+    if (finalidade === 'laje') { m_areia = 2.1; m_pedra = 3.1; ac = 0.53; }
+    if (finalidade === 'pilar') { m_areia = 1.8; m_pedra = 2.6; ac = 0.46; } // Mais rico e fluido
+    if (finalidade === 'calcada') { m_areia = 2.5; m_pedra = 3.5; ac = 0.58; } // Menos cimento (20MPa)
+    if (finalidade === 'arrimo') { m_areia = 1.7; m_pedra = 2.5; ac = 0.45; } // Impermeável (30MPa)
+    if (finalidade === 'baldrame') { m_areia = 2.0; m_pedra = 3.0; ac = 0.52; }
+    if (finalidade === 'magro') { m_areia = 3.2; m_pedra = 4.5; ac = 0.65; } // Lastro (15MPa)
 
-    // Ajuste pelo tamanho da brita (Fator de Consumo de Água da ABCP)
-    // Britas menores possuem maior área superficial, demandando mais água/pasta
-    if (tamanhoPedra === '0') { ac += 0.03; m_areia += 0.1; } // Pedrisco pede mais pasta
-    if (tamanhoPedra === '2') { ac -= 0.02; m_pedra -= 0.1; } // Pedra grossa pede menos pasta
+    if (tamanhoPedra === '0') { ac += 0.03; m_areia += 0.1; } 
+    if (tamanhoPedra === '2') { ac -= 0.02; m_pedra -= 0.1; } 
 
-    // 2. Banco de Dados Físicos de Materiais Nacionais (Massas específicas em kg/dm³)
-    let rho_ci = 3.11; // Média ABCP
+    let rho_ci = 3.11; 
     if (cimento === 'cp3') rho_ci = 2.95;
     if (cimento === 'cp4') rho_ci = 3.00;
     if (cimento === 'cp5') rho_ci = 3.15;
@@ -156,16 +162,7 @@ function executarDosagemCientifica() {
     if (tipoAgregado === 'seixo') rho_pe = 2.60;
     if (tipoAgregado === 'misto') { rho_pe = 2.63; m_areia = m_areia + m_pedra; m_pedra = 0; }
 
-    // Massas unitárias aparentes para conversão em volume de canteiro (kg/L)
     const gama_ar = 1.42;
     let gama_pe = (tipoAgregado === 'seixo') ? 1.52 : 1.38;
 
-    // 3. Modelagem Física de Umidade e Inchamento Estocástico da Areia
     let h = 0.0;
-    let inchamento = 1.0;
-
-    if (umidadeEstado === 'umida') { h = 0.04; inchamento = 1.26; } // Areia média padrão brasileira úmida
-    if (umidadeEstado === 'molhada') { h = 0.08; inchamento = 1.16; } // Saturação reduz efeito do inchamento
-
-    // 4. Redução Química de Água por Aditivo Plastificante
-    let fatorReducaoAgua = 1.0;
