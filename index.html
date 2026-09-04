@@ -1,168 +1,196 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Traço Engenharia Brasil v4</title>
-    <style>
-        * { box-sizing: border-box; font-family: sans-serif; margin: 0; padding: 0; }
-        body { background-color: #0f172a; padding: 15px; display: flex; justify-content: center; color: #334155; }
-        .card { background: white; width: 100%; max-width: 480px; padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        h1 { text-align: center; color: #1e293b; font-size: 22px; margin-bottom: 5px; font-weight: 800; }
-        .subtitle { text-align: center; font-size: 12px; color: #64748b; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
-        h3 { font-size: 13px; color: #1e293b; margin: 14px 0 6px 0; font-weight: 700; text-transform: uppercase; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; background: #fff; color: #1e293b; outline: none; }
-        input:focus, select:focus { border-color: #0284c7; }
-        .row { display: flex; gap: 10px; }
-        button { width: 100%; background-color: #0284c7; color: white; border: none; padding: 16px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 6px rgba(2, 132, 199, 0.2); transition: 0.2s; }
-        button:hover { background-color: #0369a1; }
-        .results { margin-top: 25px; padding: 18px; background-color: #f8fafc; border: 2px solid #e2e8f0; border-top: 5px solid #0284c7; border-radius: 8px; display: none; }
-        .results h2 { font-size: 15px; color: #0f172a; margin-bottom: 12px; text-align: center; font-weight: 800; }
-        .item { font-size: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px; align-items: center; }
-        .bold { font-weight: 800; color: #0284c7; font-size: 16px; }
-        .alert { font-size: 12px; color: #b45309; background-color: #fffbeb; padding: 12px; border-radius: 8px; margin-top: 5px; border-left: 4px solid #f59e0b; line-height: 1.4; font-weight: 500; }
-    </style>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Calculadora de Traço Engenharia Brasil v4</title>
+ <style>
+ * { box-sizing: border-box; font-family: sans-serif; margin: 0; padding: 0; }
+ body { background-color: #0f172a; padding: 15px; display: flex; justify-content: center; color: #334155; }
+ .card { background: white; width: 100%; max-width: 480px; padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+ h1 { text-align: center; color: #1e293b; font-size: 22px; margin-bottom: 5px; font-weight: 800; }
+ .subtitle { text-align: center; font-size: 12px; color: #64748b; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+ h3 { font-size: 13px; color: #1e293b; margin: 14px 0 6px 0; font-weight: 700; text-transform: uppercase; }
+ input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; background: #fff; color: #1e293b; outline: none; }
+ input:focus, select:focus { border-color: #0284c7; }
+ .row { display: flex; gap: 10px; }
+ button { width: 100%; background-color: #0284c7; color: white; border: none; padding: 16px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 6px rgba(2, 132, 199, 0.2); transition: 0.2s; }
+ button:hover { background-color: #0369a1; }
+ .results { margin-top: 25px; padding: 18px; background-color: #f8fafc; border: 2px solid #e2e8f0; border-top: 5px solid #0284c7; border-radius: 8px; display: none; }
+ .results h2 { font-size: 15px; color: #0f172a; margin-bottom: 12px; text-align: center; font-weight: 800; }
+ .item { font-size: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px; align-items: center; }
+ .bold { font-weight: 800; color: #0284c7; font-size: 16px; }
+ .alert { font-size: 12px; color: #b45309; background-color: #fffbeb; padding: 12px; border-radius: 8px; margin-top: 5px; border-left: 4px solid #f59e0b; line-height: 1.4; font-weight: 500; }
+ </style>
 </head>
 <body>
-
 <div class="card">
-    <h1>🧮 Dosagem Científica</h1>
-    <div class="subtitle">Padrão NBR 12655 / ABCP</div>
-    
-    <h3>1. Finalidade da Concretagem</h3>
-    <select id="finalidadeObra" onchange="atualizarInstrucoes()">
-        <option value="rampa">Rampa de Garagem / Calçada de Carro (25MPa)</option>
-        <option value="laje">Lajes Comuns e Vigas Aéreas (25MPa)</option>
-        <option value="pilar">Pilares e Paredes de Concreto Estrutural (30MPa)</option>
-        <option value="calcada">Calçadas de Pedestre e Pisos de Quintal (20MPa)</option>
-        <option value="arrimo">Muros de Arrimo e Contenções de Terra (30MPa)</option>
-        <option value="baldrame">Vigas de Fundação / Baldrames e Blocos (25MPa)</option>
-        <option value="magro">Concreto Magro / Lastro de Proteção (15MPa)</option>
-    </select>
-    <div id="dicaFinalidade" class="alert">💡 Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.</div>
-
-    <h3>2. Agregados Regionais</h3>
-    <div class="row">
-        <select id="tipoAgregado">
-            <option value="brita">Brita Comercial</option>
-            <option value="seixo">Seixo Rolado</option>
-            <option value="misto">Seixo Misto (Rio)</option>
-        </select>
-        <select id="tamanhoPedra">
-            <option value="0">Brita 0 (Pedrisco)</option>
-            <option value="1" selected>Brita 1 (Padrão Geral)</option>
-            <option value="2">Brita 2 (Fundações/Pisos)</option>
-        </select>
-    </div>
-
-    <h3>3. Tipo de Cimento Nacional</h3>
-    <select id="tipoCimento">
-        <option value="cp2">Cimento CP II (Composto - Uso Geral)</option>
-        <option value="cp3">Cimento CP III (Alto Forno - Cura Lenta)</option>
-        <option value="cp4">Cimento CP IV (Pozolânico - Durabilidade)</option>
-        <option value="cp5">Cimento CP V-ARI (Alta Resistência Inicial)</option>
-    </select>
-
-    <h3>4. Aditivos de Performance</h3>
-    <select id="usaAditivo" onchange="ajustarAditivo()">
-        <option value="nao">Sem Aditivo Plastificante</option>
-        <option value="sim">Com Aditivo Plastificante (Redutor de Água)</option>
-    </select>
-    <div id="campoDosagemAditivo" style="display:none;">
-        <input type="number" id="dosagemAditivo" value="0.5" step="0.1" placeholder="Dosagem % (Ex: 0.5)">
-    </div>
-
-    <h3>5. Cubagem e Perda Real</h3>
-    <div class="row">
-        <input type="number" id="volume" placeholder="Volume m³" value="1" step="0.1">
-        <select id="perdaObra">
-            <option value="5">5% Perda (Calhas/Carrinho)</option>
-            <option value="10" selected>10% Perda (Solo/Regularização)</option>
-            <option value="15">15% Perda (Alta variação)</option>
-        </select>
-    </div>
-
-    <h3>6. Estado da Areia no Canteiro</h3>
-    <select id="umidadeAreia">
-        <option value="seca">☀️ Totalmente Seca (Pilha protegida)</option>
-        <option value="umida" selected>☁️ Úmida / Normal (Exposta ao tempo)</option>
-        <option value="molhada">🌧️ Encharcada (Pós-chuva / Fundo da pilha)</option>
-    </select>
-
-    <button onclick="executarDosagemCientifica()">Calcular Traço Assertivo</button>
-
-    <div class="results" id="caixaResultado">
-        <h2>📋 RECEITA DO CONCRETO (VOLUME TOTAL):</h2>
-        <div class="item">Cimento (Sacos de 50kg): <span class="bold" id="rCimento">0</span></div>
-        <div class="item" id="linhaAditivo" style="display:none; background:#fffbeb; padding:6px; border-radius:6px; border: 1px solid #fef08a;">Aditivo Líquido: <span class="bold" id="rAditivo" style="color:#b45309;">0 ml</span></div>
-        <div class="item">Areia Lavada (Latas de 18L): <span class="bold" id="rAreia">0</span></div>
-        <div class="item" id="linhaPedra">Agregado Graúdo (Latas de 18L): <span class="bold" id="rPedra">0</span></div>
-        <div class="item" style="background: #f0fdf4; padding: 6px; border-radius: 6px; border: 1px solid #bbf7d0;">Água Limpa a Colocar: <span class="bold" id="rAgua" style="color:#15803d;">0 Litros</span></div>
-    </div>
+ <h1>📊 Dosagem Científica</h1>
+ <div class="subtitle">Padrão NBR 12655 / ABCP</div>
+ 
+ <h3>1. Finalidade da Concretagem</h3>
+ <select id="finalidadeObra">
+ <option value="rampa">Rampa de Garagem / Calçada de Carro (25MPa)</option>
+ <option value="laje">Lajes Comuns e Vigas Aéreas (25MPa)</option>
+ <option value="pilar">Pilares e Paredes de Concreto Estrutural (30MPa)</option>
+ <option value="calcada">Calçadas de Pedestre e Pisos de Quintal (20MPa)</option>
+ <option value="arrimo">Muros de Arrimo e Contenções de Terra (30MPa)</option>
+ <option value="baldrame">Vigas de Fundação / Baldrames e Blocos (25MPa)</option>
+ <option value="magro">Concreto Magro / Lastro de Proteção (15MPa)</option>
+ </select>
+ <div id="dicaFinalidade" class="alert">💡 Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.</div>
+ 
+ <h3>2. Agregados Regionais</h3>
+ <div class="row">
+ <select id="tipoAgregado">
+ <option value="brita">Brita Comercial</option>
+ <option value="seixo">Seixo Rolado</option>
+ <option value="misto">Seixo Misto (Rio)</option>
+ </select>
+ <select id="tamanhoPedra">
+ <option value="0">Brita 0 (Pedrisco)</option>
+ <option value="1" selected>Brita 1 (Padrão Geral)</option>
+ <option value="2">Brita 2 (Fundações/Pisos)</option>
+ </select>
+ </div>
+ 
+ <h3>3. Tipo de Cimento Nacional</h3>
+ <select id="tipoCimento">
+ <option value="cp2">Cimento CP II (Composto - Uso Geral)</option>
+ <option value="cp3">Cimento CP III (Alto Forno - Cura Lenta)</option>
+ <option value="cp4">Cimento CP IV (Pozolânico - Durabilidade)</option>
+ <option value="cp5">Cimento CP V-ARI (Alta Resistência Inicial)</option>
+ </select>
+ 
+ <h3>4. Aditivos de Performance</h3>
+ <select id="usaAditivo">
+ <option value="nao">Sem Aditivo Plastificante</option>
+ <option value="sim">Com Aditivo Plastificante (Redutor de Água)</option>
+ </select>
+ <div id="campoDosagemAditivo" style="display:none;">
+ <input type="number" id="dosagemAditivo" value="0.5" step="0.1" placeholder="Dosagem % (Ex: 0.5)">
+ </div>
+ 
+ <h3>5. Cubagem e Perda Real</h3>
+ <div class="row">
+ <input type="number" id="volume" placeholder="Volume m³" value="1" step="0.1">
+ <select id="perdaObra">
+ <option value="5">5% Perda (Calhas/Carrinho)</option>
+ <option value="10" selected>10% Perda (Solo/Regularização)</option>
+ <option value="15">15% Perda (Alta variação)</option>
+ </select>
+ </div>
+ 
+ <h3>6. Estado da Areia no Canteiro</h3>
+ <select id="umidadeAreia">
+ <option value="seca">☀️ Totalmente Seca (Pilha protegida)</option>
+ <option value="umida" selected>☁️ Úmida / Normal (Exposta ao tempo)</option>
+ <option value="molhada">🌧️ Encharcada (Pós-chuva / Fundo da pilha)</option>
+ </select>
+ 
+ <button id="btnCalcular">Calcular Traço Assertivo</button>
+ 
+ <div class="results" id="caixaResultado">
+ <h2>📋 RECEITA DO CONCRETO (VOLUME TOTAL):</h2>
+ <div class="item">Cimento (Sacos de 50kg): <span class="bold" id="rCimento">0</span></div>
+ <div class="item" id="linhaAditivo" style="display:none; background:#fffbeb; padding:6px; border-radius:6px; border: 1px solid #fef08a;">Aditivo Líquido: <span class="bold" id="rAditivo" style="color:#b45309;">0 ml</span></div>
+ <div class="item">Areia Lavada (Latas de 18L): <span class="bold" id="rAreia">0</span></div>
+ <div class="item" id="linhaPedra">Agregado Graúdo (Latas de 18L): <span class="bold" id="rPedra">0</span></div>
+ <div class="item" style="background: #f0fdf4; padding: 6px; border-radius: 6px; border: 1px solid #bbf7d0;">Água Limpa a Colocar: <span class="bold" id="rAgua" style="color:#15803d;">0 Litros</span></div>
+ </div>
 </div>
 
 <script>
 const dicas = {
-    rampa: "💡 Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.",
-    laje: "💡 Lajes e vigas aéreas exigem adensamento correto (vibrador ou barra) e cura molhada constante por no mínimo 7 dias para evitar fissuras de retração.",
-    pilar: "💡 Pilares exigem concreto mais fluido devido à altura. Jogue o concreto em camadas de no máximo 50cm e use vibrador para não dar bicheira no fundo.",
-    calcada: "💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros. Sem as juntas, o concreto quebra sozinho com a variação do sol e calor.",
-    arrimo: "💡 Muros de arrimo exigem alta impermeabilidade e proteção. Não economize no cimento aqui para evitar que a umidade da terra destrua a estrutura.",
-    baldrame: "💡 Concreto em contato direto com o solo. Molhe bem a vala antes de lançar o concreto para a terra não roubar a água da betoneira.",
-    magro: "💡 Lastro de proteção. Serve apenas para regularizar o solo e proteger as armaduras de ferro do contato direto com a terra úmida."
+ rampa: "💡 Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.",
+ laje: "💡 Lajes e vigas aéreas exigem adensamento correto (vibrador ou barra) e cura molhada constante por no mínimo 7 dias para evitar fissuras de retração.",
+ pilar: "💡 Pilares exigem concreto mais fluido devido à altura. Jogue o concreto em camadas de no máximo 50cm e use vibrador para não dar bicheira no fundo.",
+ calcada: "💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros. Sem as juntas, o concreto quebra sozinho com a variação do sol e calor.",
+ arrimo: "💡 Muros de arrimo exigem alta impermeabilidade e proteção. Não economize no cimento aqui para evitar que a umidade da terra destrua a estrutura.",
+ baldrame: "💡 Concreto em contato direto com o solo. Molhe bem a vala antes de lançar o concreto para a terra não roubar a água da betoneira.",
+ magro: "💡 Lastro de proteção. Serve apenas para regularizar o solo e proteger as armaduras de ferro do contato direto com a terra úmida."
 };
 
 function atualizarInstrucoes() {
-    const finalidade = document.getElementById('finalidadeObra').value;
-    document.getElementById('dicaFinalidade').innerText = dicas[finalidade];
+ const finalidade = document.getElementById('finalidadeObra').value;
+ const elementoDica = document.getElementById('dicaFinalidade');
+ if (elementoDica && dicas[finalidade]) {
+ elementoDica.innerText = dicas[finalidade];
+ }
 }
 
 function ajustarAditivo() {
-    const usa = document.getElementById('usaAditivo').value;
-    document.getElementById('campoDosagemAditivo').style.display = (usa === 'sim') ? 'block' : 'none';
+ const usa = document.getElementById('usaAditivo').value;
+ document.getElementById('campoDosagemAditivo').style.display = (usa === 'sim') ? 'block' : 'none';
 }
 
 function executarDosagemCientifica() {
-    const finalidade = document.getElementById('finalidadeObra').value;
-    const tipoAgregado = document.getElementById('tipoAgregado').value;
-    const tamanhoPedra = document.getElementById('tamanhoPedra').value;
-    const cimento = document.getElementById('tipoCimento').value;
-    const usaAditivo = document.getElementById('usaAditivo').value;
-    const umidadeEstado = document.getElementById('umidadeAreia').value;
-    let V = parseFloat(document.getElementById('volume').value) || 0;
-    const perda = parseFloat(document.getElementById('perdaObra').value) || 0;
+ const finalidade = document.getElementById('finalidadeObra').value;
+ const tipoAgregado = document.getElementById('tipoAgregado').value;
+ const tamanhoPedra = document.getElementById('tamanhoPedra').value;
+ const cimento = document.getElementById('tipoCimento').value;
+ const usaAditivo = document.getElementById('usaAditivo').value;
+ const umidadeEstado = document.getElementById('umidadeAreia').value;
+ let V = parseFloat(document.getElementById('volume').value) || 0;
+ const perda = parseFloat(document.getElementById('perdaObra').value) || 0;
+ 
+ if (V <= 0) { 
+ alert("Digite um volume válido."); 
+ return; 
+ }
+ 
+ V = V * (1 + (perda / 100));
+ 
+ // Configuração Automática de Traço Seco por finalidade (Massa)
+ let m_areia = 2.1;
+ let m_pedra = 3.1;
+ let ac = 0.53; 
+ 
+ if (finalidade === 'rampa') { m_areia = 1.9; m_pedra = 2.8; ac = 0.48; } 
+ if (finalidade === 'laje') { m_areia = 2.1; m_pedra = 3.1; ac = 0.53; }
+ if (finalidade === 'pilar') { m_areia = 1.8; m_pedra = 2.6; ac = 0.46; } 
+ if (finalidade === 'calcada') { m_areia = 2.5; m_pedra = 3.5; ac = 0.58; } 
+ if (finalidade === 'arrimo') { m_areia = 1.7; m_pedra = 2.5; ac = 0.45; } 
+ if (finalidade === 'baldrame') { m_areia = 2.0; m_pedra = 3.0; ac = 0.52; }
+ if (finalidade === 'magro') { m_areia = 3.2; m_pedra = 4.5; ac = 0.65; } 
 
-    if (V <= 0) { alert("Digite um volume válido."); return; }
+ if (tamanhoPedra === '0') { ac += 0.03; m_areia += 0.1; } 
+ if (tamanhoPedra === '2') { ac -= 0.02; m_pedra -= 0.1; } 
+ 
+ if (usaAditivo === 'sim') {
+ ac = ac * 0.88; // Redução padrão de 12% na água livre
+ }
 
-    V = V * (1 + (perda / 100));
+ let rho_ci = 3.11; 
+ if (cimento === 'cp3') rho_ci = 2.95;
+ if (cimento === 'cp4') rho_ci = 3.00;
+ if (cimento === 'cp5') rho_ci = 3.15;
+ 
+ const rho_ar = 2.65;
+ let rho_pe = 2.70; 
+ if (tipoAgregado === 'seixo') rho_pe = 2.60;
+ if (tipoAgregado === 'misto') { 
+ rho_pe = 2.63; 
+ m_areia = m_areia + m_pedra; 
+ m_pedra = 0; 
+ }
+ 
+ const gama_ar = 1.42;
+ let gama_pe = (tipoAgregado === 'seixo') ? 1.52 : 1.38;
+ 
+ // Correção de Umidade e Inchamento do canteiro
+ let h = 0.0;
+ let ia = 1.0;
+ if (umidadeEstado === 'umida') { h = 0.04; ia = 1.25; }
+ if (umidadeEstado === 'molhada') { h = 0.08; ia = 1.30; }
 
-    // Configuração Automática de Traço Seco por finalidade (Massa)
-    let m_areia = 2.1;
-    let m_pedra = 3.1;
-    let ac = 0.53; 
-
-    if (finalidade === 'rampa') { m_areia = 1.9; m_pedra = 2.8; ac = 0.48; } 
-    if (finalidade === 'laje') { m_areia = 2.1; m_pedra = 3.1; ac = 0.53; }
-    if (finalidade === 'pilar') { m_areia = 1.8; m_pedra = 2.6; ac = 0.46; } // Mais rico e fluido
-    if (finalidade === 'calcada') { m_areia = 2.5; m_pedra = 3.5; ac = 0.58; } // Menos cimento (20MPa)
-    if (finalidade === 'arrimo') { m_areia = 1.7; m_pedra = 2.5; ac = 0.45; } // Impermeável (30MPa)
-    if (finalidade === 'baldrame') { m_areia = 2.0; m_pedra = 3.0; ac = 0.52; }
-    if (finalidade === 'magro') { m_areia = 3.2; m_pedra = 4.5; ac = 0.65; } // Lastro (15MPa)
-
-    if (tamanhoPedra === '0') { ac += 0.03; m_areia += 0.1; } 
-    if (tamanhoPedra === '2') { ac -= 0.02; m_pedra -= 0.1; } 
-
-    let rho_ci = 3.11; 
-    if (cimento === 'cp3') rho_ci = 2.95;
-    if (cimento === 'cp4') rho_ci = 3.00;
-    if (cimento === 'cp5') rho_ci = 3.15;
-
-    const rho_ar = 2.65;
-    let rho_pe = 2.70; 
-    if (tipoAgregado === 'seixo') rho_pe = 2.60;
-    if (tipoAgregado === 'misto') { rho_pe = 2.63; m_areia = m_areia + m_pedra; m_pedra = 0; }
-
-    const gama_ar = 1.42;
-    let gama_pe = (tipoAgregado === 'seixo') ? 1.52 : 1.38;
-
-    let h = 0.0;
+ // Densidade Absoluta do Traço para achar consumo de cimento por m³
+ let volumeUnitarioSeco = (1 / rho_ci) + (m_areia / rho_ar) + (m_pedra / rho_pe) + ac;
+ let consumoCimentoM3 = 1000 / volumeUnitarioSeco;
+ 
+ // Total de cimento em sacos
+ let cimentoTotalKg = consumoCimentoM3 * V;
+ let sacosCimento = cimentoTotalKg / 50;
+ 
+ // Cálculo de Materiais em Massa Seca Total
+ let pesoCimentoTotal = cimentoTotalKg;
