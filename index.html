@@ -103,20 +103,21 @@
 
 <script>
 const dicas = {
- rampa: "💡 Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.",
- laje: "💡 Lajes e vigas aéreas exigem adensamento correto (vibrador ou barra) e cura molhada constante por no mínimo 7 dias para evitar fissuras de retração.",
- pilar: "💡 Pilares exigem concreto mais fluido devido à altura. Jogue o concreto em camadas de no máximo 50cm e use vibrador para não dar bicheira no fundo.",
- calcada: "💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros. Sem as juntas, o concreto quebra sozinho com a variação do sol e calor.",
- arrimo: "💡 Muros de arrimo exigem alta impermeabilidade e proteção. Não economize no cimento aqui para evitar que a umidade da terra destrua a estrutura.",
- baldrame: "💡 Concreto em contato direto com o solo. Molhe bem a vala antes de lançar o concreto para a terra não roubar a água da betoneira.",
- magro: "💡 Lastro de proteção. Serve apenas para regularizar o solo e proteger as armaduras de ferro do contato direto com a terra úmida."
+ rampa: "Rampa de carro exige concreto de consistência firme (Slump baixo) e acabamento vassourado para garantir aderência dos pneus sob chuva.",
+ laje: "Lajes e vigas aéreas exigem adensamento correto (vibrador ou barra) e cura molhada constante por no mínimo 7 dias para evitar fissuras de retração.",
+ pilar: "Pilares exigem concreto mais fluido devido à altura. Jogue o concreto em camadas de no máximo 50cm e use vibrador para não dar bicheira no fundo.",
+ calcada: "Calçadas e quintais exigem juntas de dilatação a cada 2 metros. Sem as juntas, o concreto quebra sozinho com a variação do sol e calor.",
+ arrimo: "Muros de arrimo exigem alta impermeabilidade e proteção. Não economize no cimento aqui para evitar que a umidade da terra destrua a estrutura.",
+ baldrame: "Concreto em contato direto com o solo. Molhe bem a vala antes de lançar o concreto para a terra não roubar a água da betoneira.",
+ magro: "Lastro de proteção. Serve apenas para regularizar o solo e proteger as armaduras de ferro do contato direto com a terra úmida."
 };
 
 function atualizarInstrucoes() {
  const finalidade = document.getElementById('finalidadeObra').value;
  const elementoDica = document.getElementById('dicaFinalidade');
  if (elementoDica && dicas[finalidade]) {
- elementoDica.innerText = dicas[finalidade];
+ // Injeta diretamente a lâmpada junto com o texto mapeado
+ elementoDica.innerHTML = `💡 ${dicas[finalidade]}`;
  }
 }
 
