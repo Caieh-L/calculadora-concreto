@@ -1,12 +1,3 @@
-Você tem toda razão. Do ponto de vista de usabilidade (UX) e segurança técnica, o campo de resultado da cubagem **não deve ser editável**.
-
-Permitir a edição manual do resultado calculado gera inconsistência: o usuário poderia alterar o volume final sem mudar as dimensões da peça, o que invalidaria a matemática do traço e geraria erros na compra de materiais.
-
-Ao transformar esse campo em um **campo de leitura apenas (`readonly`)** com estilo visual diferenciado (fundo cinza claro e cursor desativado), o usuário entende imediatamente que se trata de uma saída automática do sistema.
-
-O código completo e atualizado em um único arquivo (`index.html`) já inclui o atributo `readonly`, estilos de campo bloqueado e o cálculo automático em tempo real:
-
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
