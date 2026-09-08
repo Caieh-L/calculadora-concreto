@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dosagem Científica de Concreto - NBR 12655</title>
+  <title>Dosagem Científica de Concreto - NBR 12655 & Lei de Abrams</title>
   <style>
     * {
       box-sizing: border-box;
@@ -45,9 +45,9 @@
     }
 
     .header p {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: #64748b;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 0.5px;
       margin-top: 2px;
     }
@@ -81,7 +81,6 @@
       box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
     }
 
-    /* Estilo específico para o campo de resultado de volume bloqueado */
     input[readonly] {
       background-color: #f1f5f9;
       color: #0f172a;
@@ -97,10 +96,22 @@
       border-left: 4px solid #eab308;
       padding: 10px;
       border-radius: 6px;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: #854d0e;
       margin-top: 8px;
-      line-height: 1.3;
+      line-height: 1.35;
+    }
+
+    .info-box-nr17 {
+      background-color: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-left: 4px solid #22c55e;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      color: #14532d;
+      margin-top: 8px;
+      line-height: 1.35;
     }
 
     .grid-2 {
@@ -197,6 +208,7 @@
       font-size: 0.9rem;
       display: flex;
       justify-content: space-between;
+      margin-top: 6px;
     }
 
     .ratio-box {
@@ -213,6 +225,17 @@
       font-weight: 800;
       color: #0f172a;
     }
+
+    .abrams-badge {
+      display: inline-block;
+      background-color: #e0f2fe;
+      color: #0369a1;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
@@ -220,19 +243,19 @@
 <div class="container">
   <div class="header">
     <h1>📊 Dosagem Científica</h1>
-    <p>PADRÃO NBR 12655 / ABCP</p>
+    <p>PADRÃO NBR 12655 / LEI DE ABRAMS / NR-17</p>
   </div>
 
-  <!-- 1. FINALIDADE -->
+  <!-- 1. FINALIDADE (LEI DE ABRAMS) -->
   <div class="section">
-    <div class="section-title">1. Finalidade da Concretagem</div>
-    <select id="finalidade">
-      <option value="20">Calçadas de Pedestre e Pisos de Quintal (20MPa)</option>
-      <option value="25">Viga, Pilar e Laje Residencial (25MPa)</option>
-      <option value="30">Estrutura de Alta Resistência (30MPa)</option>
+    <div class="section-title">1. Finalidade e Resistência (fck)</div>
+    <select id="finalidade" onchange="calcularTraco()">
+      <option value="20">Calçadas de Pedestre e Pisos de Quintal (20 MPa)</option>
+      <option value="25">Viga, Pilar e Laje Residencial (25 MPa)</option>
+      <option value="30">Estrutura de Alta Resistência (30 MPa)</option>
     </select>
     <div class="alert-box">
-      💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros. Sem as juntas, o concreto quebra sozinho com a variação do sol e calor.
+      💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros para evitar fissuras por variação térmica.
     </div>
   </div>
 
@@ -245,8 +268,8 @@
         <option value="brita">Brita de Pedreira</option>
       </select>
       <select id="tamAgregado">
-        <option value="medio">Seixo Médio (Padrão Geral)</option>
-        <option value="brita1">Brita 1 (Padrão Geral)</option>
+        <option value="medio">Seixo Médio (Padrão)</option>
+        <option value="brita1">Brita 1 (Padrão)</option>
       </select>
     </div>
   </div>
@@ -266,7 +289,7 @@
     <div class="section-title">4. Tipo de Cimento Nacional</div>
     <select id="tipoCimento">
       <option value="cp2">Cimento CP II (Composto - Uso Geral)</option>
-      <option value="cp3">Cimento CP III (Comum / Obras Especiais)</option>
+      <option value="cp3">Cimento CP III (Obras Especiais)</option>
       <option value="cp5">Cimento CP V (Alta Resistência Inicial)</option>
     </select>
   </div>
@@ -292,8 +315,7 @@
       </div>
       
       <div class="grid-2">
-        <!-- CAMPO DE RESULTADO BLOQUEADO (READONLY) -->
-        <input type="text" id="volFinal" readonly placeholder="Volume Total (m³)" value="0.00 m³">
+        <input type="text" id="volFinal" readonly placeholder="Volume Total" value="0.00 m³">
         
         <select id="perda">
           <option value="0.10">10% Perda (Solo/Regulariz.)</option>
@@ -315,6 +337,18 @@
     </select>
   </div>
 
+  <!-- 8. UNIDADE DE MEDIDA NO CANTEIRO -->
+  <div class="section">
+    <div class="section-title">8. Recipiente de Medição da Obra</div>
+    <select id="unidadeMedida" onchange="calcularTraco()">
+      <option value="padiola">📦 Padiola Ergonômica NR-17 (45 x 35 x 23 cm = 36,2L)</option>
+      <option value="lata">🪣 Lata de Tinta Tradicional (18 Litros)</option>
+    </select>
+    <div class="info-box-nr17">
+      🛡️ <b>Padiola NR-17:</b> Projetada ergonomicamente (45x35x23 cm) para transporte por 2 operários. Limita o esforço individual a ~27 kg, em total conformidade com a Equação do NIOSH e segurança do trabalho.
+    </div>
+  </div>
+
   <!-- BOTAO DE CALCULO -->
   <button class="btn-calc" onclick="calcularTraco()">Calcular Traço Assertivo</button>
 
@@ -326,15 +360,15 @@
       <div class="res-title">🛒 LISTA DE COMPRAS (DEPÓSITO)</div>
       <div class="res-row">
         <span>Cimento Necessário:</span>
-        <span class="res-val" id="resCimentoSacos">6 sacos (5.5 exatos)</span>
+        <span class="res-val" id="resCimentoSacos">--</span>
       </div>
       <div class="res-row">
         <span>Areia Lavada:</span>
-        <span class="res-val" id="resAreiaM3">0.61 m³ (34 latas)</span>
+        <span class="res-val" id="resAreiaM3">--</span>
       </div>
       <div class="res-row">
         <span>Brita / Seixo:</span>
-        <span class="res-val" id="resPedraM3">0.63 m³ (35 latas)</span>
+        <span class="res-val" id="resPedraM3">--</span>
       </div>
     </div>
 
@@ -346,25 +380,28 @@
         <span class="res-val">1 Saco (50 kg)</span>
       </div>
       <div class="res-row">
-        <span>Areia (Latas de 18L):</span>
-        <span class="res-val" id="resAreiaLatas">6.1 latas</span>
+        <span id="labelAreia">Areia:</span>
+        <span class="res-val" id="resAreiaMedida">--</span>
       </div>
       <div class="res-row">
-        <span>Brita/Seixo (Latas de 18L):</span>
-        <span class="res-val" id="resPedraLatas">6.4 latas</span>
+        <span id="labelPedra">Brita/Seixo:</span>
+        <span class="res-val" id="resPedraMedida">--</span>
       </div>
       <div class="highlight-box">
         <span>Água Limpa a Adicionar:</span>
-        <span id="resAguaLitros">24.0 Litros (1.3 latas)</span>
+        <span id="resAguaLitros">-- Litros</span>
       </div>
     </div>
 
     <!-- TRAÇO EM VOLUME -->
     <div class="res-block">
-      <div class="res-title">📐 TRAÇO PROPORCIONAL EM VOLUME (LATAS)</div>
+      <div class="res-title">📐 TRAÇO PROPORCIONAL EM VOLUME</div>
       <div class="ratio-box">
-        <span style="font-size: 0.8rem; color: #64748b; display: block; margin-bottom: 2px;">Proporção (Cimento : Areia : Pedra):</span>
-        <span class="ratio-val" id="resProporcao">1 : 2.8 : 2.9</span>
+        <span style="font-size: 0.8rem; color: #64748b; display: block; margin-bottom: 2px;" id="labelProporcao">Proporção (Cimento : Areia : Pedra):</span>
+        <span class="ratio-val" id="resProporcao">--</span>
+        <div>
+          <span class="abrams-badge" id="badgeAbrams">Relação Água/Cimento (Lei de Abrams): --</span>
+        </div>
       </div>
     </div>
 
@@ -372,7 +409,6 @@
 </div>
 
 <script>
-  // Atualiza a cubagem automaticamente conforme o usuário digita as dimensões
   const compInput = document.getElementById('comp');
   const largInput = document.getElementById('larg');
   const altInput = document.getElementById('alt');
@@ -382,7 +418,7 @@
   function atualizarCubagem() {
     const c = parseFloat(compInput.value) || 0;
     const l = parseFloat(largInput.value) || 0;
-    const a = (parseFloat(altInput.value) || 0) / 100; // cm para metros
+    const a = (parseFloat(altInput.value) || 0) / 100;
     const fatorPerda = 1 + parseFloat(perdaSelect.value);
 
     if (c > 0 && l > 0 && a > 0) {
@@ -405,40 +441,97 @@
     const a = (parseFloat(altInput.value) || 0) / 100;
     const fatorPerda = 1 + parseFloat(perdaSelect.value);
     
-    let volTotal = c * l * a * fatorPerda;
-    if (volTotal <= 0) volTotal = 0.88; // Valor padrão de exemplo caso esteja vazio (10x1x0.08 + 10%)
+    const volTotal = c * l * a * fatorPerda;
 
-    // Parâmetros de dosagem (Calçadas 20MPa - CP II)
-    const consumoCimentoM3 = 312.5; // kg/m³
+    // Se o volume for zero ou inválido, mantém os campos zerados e limpos
+    if (volTotal <= 0) {
+      document.getElementById('resCimentoSacos').innerText = '--';
+      document.getElementById('resAreiaM3').innerText = '--';
+      document.getElementById('resPedraM3').innerText = '--';
+      document.getElementById('resAreiaMedida').innerText = '--';
+      document.getElementById('resPedraMedida').innerText = '--';
+      document.getElementById('resAguaLitros').innerText = '-- Litros';
+      document.getElementById('resProporcao').innerText = '--';
+      document.getElementById('badgeAbrams').innerText = 'Informe as dimensões acima para calcular';
+      return;
+    }
+
+    // 1. Aplicação da Lei de Abrams para Relação Água/Cimento (a/c)
+    const fck = parseFloat(document.getElementById('finalidade').value);
+    // fcm28 = fck + 1.65 * sd (sd = 5.5 MPa segundo NBR 12655)
+    const fcm28 = fck + 9.075; 
+    
+    // Parâmetros de Abrams para Cimento CP II (K1 = 98, K2 = 11.2)
+    const k1 = 98.0;
+    const k2 = 11.2;
+    // a/c = log(K1 / fcm28) / log(K2)
+    let acRatio = Math.log(k1 / fcm28) / Math.log(k2);
+    
+    // Ajuste por aditivo plastificante (reduz consumo de água em ~8%)
+    const aditivo = document.getElementById('aditivo').value;
+    if (aditivo === 'plastificante') {
+      acRatio *= 0.92;
+    }
+
+    // Consumo de Cimento por m³ baseado em fck
+    let consumoCimentoM3 = 310;
+    if (fck === 25) consumoCimentoM3 = 350;
+    if (fck === 30) consumoCimentoM3 = 390;
+
     const cimentoTotalKg = volTotal * consumoCimentoM3;
     const sacosExatos = cimentoTotalKg / 50;
     const sacosArredondados = Math.ceil(sacosExatos);
 
-    // Latas por saco de 50kg
-    const latasAreiaPorSaco = 6.1;
-    const latasPedraPorSaco = 6.4;
-    const litrosAguaPorSaco = 24.0;
+    // Consumo de Água por saco de cimento (50kg) em Litros
+    const litrosAguaPorSaco = 50 * acRatio;
 
-    // Totais de materiais
-    const latasAreiaTotal = sacosExatos * latasAreiaPorSaco;
-    const latasPedraTotal = sacosExatos * latasPedraPorSaco;
+    // Seleção de Recipiente (Padiola 36.225L vs Lata 18L)
+    const tipoUnidade = document.getElementById('unidadeMedida').value;
+    const volRecipienteL = (tipoUnidade === 'padiola') ? 36.225 : 18.0;
+    const nomeRecipiente = (tipoUnidade === 'padiola') ? 'padiolas' : 'latas';
+
+    // Proporções volumétricas base
+    const latasAreiaPorSacoLata = 6.1;
+    const latasPedraPorSacoLata = 6.4;
+    const volAreiaLitrosPorSaco = latasAreiaPorSacoLata * 18.0;
+    const volPedraLitrosPorSaco = latasPedraPorSacoLata * 18.0;
+
+    // Conversão para a unidade selecionada por saco de 50kg
+    const medAreiaPorSaco = volAreiaLitrosPorSaco / volRecipienteL;
+    const medPedraPorSaco = volPedraLitrosPorSaco / volRecipienteL;
+
+    // Totais de materiais para a obra
+    const medAreiaTotal = sacosExatos * medAreiaPorSaco;
+    const medPedraTotal = sacosExatos * medPedraPorSaco;
     
-    const areiaM3 = (latasAreiaTotal * 18) / 1000;
-    const pedraM3 = (latasPedraTotal * 18) / 1000;
+    const areiaM3 = (sacosExatos * volAreiaLitrosPorSaco) / 1000;
+    const pedraM3 = (sacosExatos * volPedraLitrosPorSaco) / 1000;
 
-    // Atualiza a tela
+    // Atualização dos rótulos de tela
+    document.getElementById('labelAreia').innerText = `Areia (${nomeRecipiente.charAt(0).toUpperCase() + nomeRecipiente.slice(1)}):`;
+    document.getElementById('labelPedra').innerText = `Brita/Seixo (${nomeRecipiente.charAt(0).toUpperCase() + nomeRecipiente.slice(1)}):`;
+
+    // Preenchimento dos resultados
     document.getElementById('resCimentoSacos').innerText = `${sacosArredondados} sacos (${sacosExatos.toFixed(1)} exatos)`;
-    document.getElementById('resAreiaM3').innerText = `${areiaM3.toFixed(2)} m³ (${Math.round(latasAreiaTotal)} latas)`;
-    document.getElementById('resPedraM3').innerText = `${pedraM3.toFixed(2)} m³ (${Math.round(latasPedraTotal)} latas)`;
+    document.getElementById('resAreiaM3').innerText = `${areiaM3.toFixed(2)} m³ (${Math.round(medAreiaTotal)} ${nomeRecipiente})`;
+    document.getElementById('resPedraM3').innerText = `${pedraM3.toFixed(2)} m³ (${Math.round(medPedraTotal)} ${nomeRecipiente})`;
 
-    document.getElementById('resAreiaLatas').innerText = `${latasAreiaPorSaco} latas`;
-    document.getElementById('resPedraLatas').innerText = `${latasPedraPorSaco} latas`;
-    document.getElementById('resAguaLitros').innerText = `${litrosAguaPorSaco.toFixed(1)} Litros (${(litrosAguaPorSaco / 18).toFixed(1)} latas de 18L)`;
+    document.getElementById('resAreiaMedida').innerText = `${medAreiaPorSaco.toFixed(1)} ${nomeRecipiente}`;
+    document.getElementById('resPedraMedida').innerText = `${medPedraPorSaco.toFixed(1)} ${nomeRecipiente}`;
+    
+    // ÁGUA EXCLUSIVAMENTE EM LITROS
+    document.getElementById('resAguaLitros').innerText = `${litrosAguaPorSaco.toFixed(1)} Litros`;
 
-    document.getElementById('resProporcao').innerText = `1 : ${(latasAreiaPorSaco / 2.17).toFixed(1)} : ${(latasPedraPorSaco / 2.17).toFixed(1)}`;
+    // Proporção relativa (1 : Areia : Pedra)
+    const propCimentoVol = 36.0 / volRecipienteL; // Volume aparente de 1 saco de 50kg em litros (~36L)
+    const propAreiaRel = medAreiaPorSaco / propCimentoVol;
+    const propPedraRel = medPedraPorSaco / propCimentoVol;
+
+    document.getElementById('resProporcao').innerText = `1 : ${propAreiaRel.toFixed(1)} : ${propPedraRel.toFixed(1)}`;
+    document.getElementById('badgeAbrams').innerText = `Relação Água/Cimento (Lei de Abrams): ${acRatio.toFixed(2)}`;
   }
 
-  // Executa o cálculo inicial ao carregar
+  // Executa verificação inicial limpa
   atualizarCubagem();
 </script>
 
