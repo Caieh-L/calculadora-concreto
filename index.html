@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
+HTML
+<!DOCTYPE html><html lang="pt-BR"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora Dosagem Científica - NBR 12655 / Lei de Abrams / NR-17</title>
+  <title>Dosagem Científica - NBR 12655 / Lei de Abrams / NR-17</title>
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #0b1329 0%, #172a45 100%);
@@ -153,6 +152,10 @@
       border: 1.5px solid #e2e8f0;
       border-radius: 10px;
       padding: 12px;
+    }
+
+    .cubagem-card .grid-3 input::placeholder {
+      font-size: 11px;
     }
 
     .cubagem-title {
@@ -330,11 +333,7 @@
       color: var(--primary);
       margin-top: 4px;
     }
-  </style>
-</head>
-<body>
-
-<div class="container">
+  </style></head><body><div class="container">
   <!-- Header -->
   <div class="header">
     <div class="header-title">📊 Calculadora Dosagem Científica</div>
@@ -557,10 +556,7 @@
         <div class="traco-ac" id="resRelacaoAC">Relação Água/Cimento (Lei de Abrams): 0.50</div>
       </div>
     </div>
-  </div>
-</div>
-
-<script>
+  </div></div><script>
   // Options mapping for aggregates
   const opcoesAgregados = {
     seixo_rolado: [
@@ -791,8 +787,4 @@
     atualizarDicaFinalidade();
     atualizarInfoRecipiente();
     atualizarFormatoCubagem();
-  };
-</script>
-
-</body>
-</html>
+  };</script></body></html>
