@@ -1,5 +1,6 @@
-HTML
-<!DOCTYPE html><html lang="pt-BR"><head>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dosagem Científica - NBR 12655 / Lei de Abrams / NR-17</title>
@@ -154,8 +155,17 @@ HTML
       padding: 12px;
     }
 
-    .cubagem-card .grid-3 input::placeholder {
-      font-size: 11px;
+    .cubagem-input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cubagem-input-label {
+      font-size: 0.70rem;
+      font-weight: 700;
+      color: var(--muted-text);
+      margin-bottom: 4px;
+      white-space: nowrap;
     }
 
     .cubagem-title {
@@ -214,11 +224,15 @@ HTML
     }
 
     .abrams-svg-container {
+      max-height: 260px;
       width: 100%;
+      position: relative;
+      margin: 0 auto;
       background: #ffffff;
       border: 1px solid #cbd5e1;
       border-radius: 8px;
       padding: 8px;
+      overflow: hidden;
     }
 
     .abrams-legend {
@@ -333,458 +347,477 @@ HTML
       color: var(--primary);
       margin-top: 4px;
     }
-  </style></head><body><div class="container">
-  <!-- Header -->
-  <div class="header">
-    <div class="header-title">📊 Calculadora Dosagem Científica</div>
-    <div class="header-subtitle">PADRÃO NBR 12655 / LEI DE ABRAMS / NR-17</div>
-  </div>
-
-  <!-- Form Fields -->
-
-  <!-- 1. Finalidade -->
-  <div class="form-group">
-    <label class="label-title">1. FINALIDADE E RESISTÊNCIA (FCK)</label>
-    <select id="finalidade" onchange="atualizarDicaFinalidade(); calcular();">
-      <option value="15">Concreto Magro / Lastro de Proteção (15MPa)</option>
-      <option value="20" selected>Calçadas de Pedestre e Pisos de Quintal (20MPa)</option>
-      <option value="25">Vigas, Lajes, Pilares e Fundações Residenciais (25MPa)</option>
-      <option value="30">Pilares de Prédios, Muros de Arrimo e Contenções (30MPa)</option>
-      <option value="35">Pisos Industriais, Postos de Combustível e Tráfego Pesado (35MPa)</option>
-    </select>
-    <div id="dicaFinalidade" class="card-box warning-box">
-      💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros para evitar fissuras por variação térmica.
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-title">📊 Calculadora Dosagem Científica</div>
+      <div class="header-subtitle">PADRÃO NBR 12655 / LEI DE ABRAMS / NR-17</div>
     </div>
-  </div>
 
-  <!-- 2. Agregados Regionais -->
-  <div class="form-group">
-    <label class="label-title">2. AGREGADOS REGIONAIS</label>
-    <div class="grid-2">
-      <select id="tipoAgregado" onchange="atualizarOpcoesAgregado(); calcular();">
-        <option value="seixo_rolado" selected>Seixo Rolado</option>
-        <option value="brita">Brita Comercial</option>
-        <option value="seixo_misto">Seixo Misto (Rio)</option>
+    <!-- Form Fields -->
+
+    <!-- 1. Finalidade -->
+    <div class="form-group">
+      <label class="label-title">1. FINALIDADE E RESISTÊNCIA (FCK)</label>
+      <select id="finalidade" onchange="atualizarDicaFinalidade(); calcular();">
+        <option value="15">Concreto Magro / Lastro de Proteção (15MPa)</option>
+        <option value="20" selected>Calçadas de Pedestre e Pisos de Quintal (20MPa)</option>
+        <option value="25">Vigas, Lajes, Pilares e Fundações Residenciais (25MPa)</option>
+        <option value="30">Pilares de Prédios, Muros de Arrimo e Contenções (30MPa)</option>
+        <option value="35">Pisos Industriais, Postos de Combustível e Tráfego Pesado (35MPa)</option>
       </select>
-      <select id="tamAgregado" onchange="calcular();">
-        <!-- Preenchido via JS -->
-      </select>
+      <div id="dicaFinalidade" class="card-box warning-box">
+        💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros para evitar fissuras por variação térmica.
+      </div>
     </div>
-  </div>
 
-  <!-- 3. Tipo de Areia -->
-  <div class="form-group">
-    <label class="label-title">3. TIPO DE AREIA</label>
-    <select id="tipoAreia" onchange="calcular();">
-      <option value="media" selected>Areia Média (Padrão Geral)</option>
-      <option value="fina">Areia Fina</option>
-      <option value="grossa">Areia Grossa</option>
-    </select>
-  </div>
-
-  <!-- 4. Tipo de Cimento Nacional -->
-  <div class="form-group">
-    <label class="label-title">4. TIPO DE CIMENTO NACIONAL</label>
-    <select id="tipoCimento" onchange="calcular();">
-      <option value="cp2" selected>Cimento CP II (Composto - Uso Geral)</option>
-      <option value="cp3">Cimento CP III (Alto Forno - Cura Lenta)</option>
-      <option value="cp4">Cimento CP IV (Pozolânico - Durabilidade)</option>
-      <option value="cp5">Cimento CP V-ARI (Alta Resistência Inicial)</option>
-    </select>
-  </div>
-
-  <!-- 5. Aditivos de Performance -->
-  <div class="form-group">
-    <label class="label-title">5. ADITIVOS DE PERFORMANCE</label>
-    <select id="aditivo" onchange="calcular();">
-      <option value="sem" selected>Nenhum (Sem aditivo)</option>
-      <option value="plastificante">Plastificante (Redutor de Água)</option>
-      <option value="impermeabilizante">Impermeabilizante (Contra Umidade)</option>
-    </select>
-  </div>
-
-  <!-- 6. Calculadora de Cubagem -->
-  <div class="form-group">
-    <label class="label-title">6. CALCULADORA DE CUBAGEM</label>
-    <div class="cubagem-card">
-      <div class="cubagem-title">Calcular volume pelas medidas da peça:</div>
-      
-      <!-- Seletor de Formato -->
-      <div class="format-selector">
-        <label class="format-option">
-          <input type="radio" name="formatoCubagem" value="placa" checked onchange="atualizarFormatoCubagem();">
-          <span>Placa (Lajes, Pisos, Calçadas)</span>
-        </label>
-        <label class="format-option">
-          <input type="radio" name="formatoCubagem" value="barra" onchange="atualizarFormatoCubagem();">
-          <span>Barra (Pilares, Colunas, Vigas)</span>
-        </label>
-      </div>
-
-      <div class="grid-3" style="margin-bottom: 8px;">
-        <input type="number" id="comp" placeholder="Comprimento (m)" value="10" step="0.1" oninput="calcular();">
-        <input type="number" id="larg" placeholder="Largura (m)" value="5" step="0.1" oninput="calcular();">
-        <input type="number" id="esp" placeholder="Espessura (cm)" value="5" step="0.5" oninput="calcular();">
-      </div>
+    <!-- 2. Agregados Regionais -->
+    <div class="form-group">
+      <label class="label-title">2. AGREGADOS REGIONAIS</label>
       <div class="grid-2">
-        <input type="text" id="volResult" value="2.75 m³" readonly>
-        <select id="margemPerda" onchange="calcular();">
-          <option value="0.00">0% (Volume Exato)</option>
-          <option value="0.05">5% Perda (Formas Estanques)</option>
-          <option value="0.10" selected>10% Perda (Lajes e Vigas Comuns)</option>
-          <option value="0.15">15% Perda (Piso Direto na Terra / Solo)</option>
+        <select id="tipoAgregado" onchange="atualizarOpcoesAgregado(); calcular();">
+          <option value="seixo_rolado" selected>Seixo Rolado</option>
+          <option value="brita">Brita Comercial</option>
+          <option value="seixo_misto">Seixo Misto (Rio)</option>
+        </select>
+        <select id="tamAgregado" onchange="calcular();">
+          <!-- Preenchido via JS -->
         </select>
       </div>
     </div>
-  </div>
 
-  <!-- 7. Estado da Areia no Canteiro -->
-  <div class="form-group">
-    <label class="label-title">7. ESTADO DA AREIA NO CANTEIRO</label>
-    <select id="estadoAreia" onchange="calcular();">
-      <option value="umida" selected>🌧️ Úmida / Normal (Exposta ao tempo)</option>
-      <option value="seca">☀️ Totalmente Seca (Coberta)</option>
-      <option value="encharcada">🌊 Muito Molhada / Encharcada</option>
-    </select>
-  </div>
-
-  <!-- 8. Recipiente de Medição da Obra -->
-  <div class="form-group">
-    <label class="label-title">8. RECIPIENTE DE MEDIÇÃO DA OBRA</label>
-    <select id="recipiente" onchange="atualizarInfoRecipiente(); calcular();">
-      <option value="padiola" selected>📦 Padiola Ergonomica NR-17 (C: 45 x L: 35 x A: 23 cm = 36,2L)</option>
-      <option value="lata">🛢️ Lata de Tinta Tradicional (18 Litros)</option>
-    </select>
-    <div id="infoRecipiente" class="card-box info-box">
-      📍 <strong>Padiola NR-17:</strong> Projetada ergonomicamente (C: 45 cm x L: 35 cm x A: 23 cm) para transporte por 2 operários. Limita o esforço individual a ~27 kg, em total conformidade com a Equação do NIOSH e segurança do trabalho.
+    <!-- 3. Tipo de Areia -->
+    <div class="form-group">
+      <label class="label-title">3. TIPO DE AREIA</label>
+      <select id="tipoAreia" onchange="calcular();">
+        <option value="media" selected>Areia Média (Padrão Geral)</option>
+        <option value="fina">Areia Fina</option>
+        <option value="grossa">Areia Grossa</option>
+      </select>
     </div>
-  </div>
 
-  <!-- Painel Gráfico da Curva de Abrams -->
-  <div class="abrams-card">
-    <div class="abrams-header">📈 Curva de Abrams (Relação Água/Cimento vs Resistência)</div>
-    <div class="abrams-svg-container">
-      <svg viewBox="0 0 360 170" width="100%" height="auto" style="display: block;">
-        <!-- Grid horizontal -->
-        <line x1="45" y1="20" x2="330" y2="20" stroke="#f1f5f9" stroke-width="1" />
-        <line x1="45" y1="55" x2="330" y2="55" stroke="#f1f5f9" stroke-width="1" />
-        <line x1="45" y1="90" x2="330" y2="90" stroke="#f1f5f9" stroke-width="1" />
-        <line x1="45" y1="125" x2="330" y2="125" stroke="#f1f5f9" stroke-width="1" />
+    <!-- 4. Tipo de Cimento Nacional -->
+    <div class="form-group">
+      <label class="label-title">4. TIPO DE CIMENTO NACIONAL</label>
+      <select id="tipoCimento" onchange="calcular();">
+        <option value="cp2" selected>Cimento CP II (Composto - Uso Geral)</option>
+        <option value="cp3">Cimento CP III (Alto Forno - Cura Lenta)</option>
+        <option value="cp4">Cimento CP IV (Pozolânico - Durabilidade)</option>
+        <option value="cp5">Cimento CP V-ARI (Alta Resistência Inicial)</option>
+      </select>
+    </div>
 
-        <!-- Eixos -->
-        <line x1="45" y1="20" x2="45" y2="125" stroke="#94a3b8" stroke-width="1.5" />
-        <line x1="45" y1="125" x2="330" y2="125" stroke="#94a3b8" stroke-width="1.5" />
+    <!-- 5. Aditivos de Performance -->
+    <div class="form-group">
+      <label class="label-title">5. ADITIVOS DE PERFORMANCE</label>
+      <select id="aditivo" onchange="calcular();">
+        <option value="sem" selected>Nenhum (Sem aditivo)</option>
+        <option value="plastificante">Plastificante (Redutor de Água)</option>
+        <option value="impermeabilizante">Impermeabilizante (Contra Umidade)</option>
+      </select>
+    </div>
 
-        <!-- Rótulos Eixo Y (MPa) -->
-        <text x="40" y="24" font-size="9" fill="#64748b" text-anchor="end" font-weight="600">35 MPa</text>
-        <text x="40" y="59" font-size="9" fill="#64748b" text-anchor="end" font-weight="600">28 MPa</text>
-        <text x="40" y="94" font-size="9" fill="#64748b" text-anchor="end" font-weight="600">20 MPa</text>
-        <text x="40" y="129" font-size="9" fill="#64748b" text-anchor="end" font-weight="600">12 MPa</text>
-
-        <!-- Rótulos Eixo X (a/c) -->
-        <text x="45" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.30</text>
-        <text x="116" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.40</text>
-        <text x="187" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.50</text>
-        <text x="258" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.60</text>
-        <text x="330" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.70</text>
-
-        <text x="187" y="158" font-size="10" fill="#0369a1" text-anchor="middle" font-weight="700">Relação Água / Cimento (a/c)</text>
-
-        <!-- Curva teórica de Abrams -->
-        <path d="M 45 20 C 115 50, 200 95, 330 120" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round"/>
-
-        <!-- Ponto Dinâmico Vermelho -->
-        <circle id="abramsDot" cx="187" cy="90" r="6" fill="#ef4444" stroke="#ffffff" stroke-width="2">
-          <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite" />
-        </circle>
+    <!-- 6. Calculadora de Cubagem -->
+    <div class="form-group">
+      <label class="label-title">6. CALCULADORA DE CUBAGEM</label>
+      <div class="cubagem-card">
+        <div class="cubagem-title">Calcular volume pelas medidas da peça:</div>
         
-        <!-- Label flutuante do ponto -->
-        <text id="abramsDotLabel" x="187" y="78" font-size="10" fill="#dc2626" font-weight="800" text-anchor="middle">0.50</text>
-      </svg>
+        <!-- Seletor de Formato -->
+        <div class="format-selector">
+          <label class="format-option">
+            <input type="radio" name="formatoCubagem" value="placa" checked onchange="atualizarFormatoCubagem();">
+            <span>Placa (Lajes, Pisos, Calçadas)</span>
+          </label>
+          <label class="format-option">
+            <input type="radio" name="formatoCubagem" value="barra" onchange="atualizarFormatoCubagem();">
+            <span>Barra (Pilares, Colunas, Vigas)</span>
+          </label>
+        </div>
+
+        <div class="grid-3" style="margin-bottom: 8px;">
+          <div class="cubagem-input-group">
+            <label class="cubagem-input-label" id="lblComp">Comp. (m)</label>
+            <input type="number" id="comp" step="0.1" oninput="calcular();">
+          </div>
+          <div class="cubagem-input-group">
+            <label class="cubagem-input-label" id="lblLarg">Largura (m)</label>
+            <input type="number" id="larg" step="0.1" oninput="calcular();">
+          </div>
+          <div class="cubagem-input-group">
+            <label class="cubagem-input-label" id="lblEsp">Espessura (cm)</label>
+            <input type="number" id="esp" step="0.5" oninput="calcular();">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <input type="text" id="volResult" value="0.00 m³" readonly>
+          <select id="margemPerda" onchange="calcular();">
+            <option value="0.00">0% (Volume Exato)</option>
+            <option value="0.05">5% Perda (Formas Estanques)</option>
+            <option value="0.10" selected>10% Perda (Lajes e Vigas Comuns)</option>
+            <option value="0.15">15% Perda (Piso Direto na Terra / Solo)</option>
+          </select>
+        </div>
+      </div>
     </div>
-    <div class="abrams-legend">
-      📊 <strong>Curva de Abrams:</strong> Mostra que quanto menor a relação água/cimento, maior é a resistência (MPa) alcançada pelo concreto.
+
+    <!-- 7. Estado da Areia no Canteiro -->
+    <div class="form-group">
+      <label class="label-title">7. ESTADO DA AREIA NO CANTEIRO</label>
+      <select id="estadoAreia" onchange="calcular();">
+        <option value="umida" selected>🌧️ Úmida / Normal (Exposta ao tempo)</option>
+        <option value="seca">☀️ Totalmente Seca (Coberta)</option>
+        <option value="encharcada">🌊 Muito Molhada / Encharcada</option>
+      </select>
+    </div>
+
+    <!-- 8. Recipiente de Medição da Obra -->
+    <div class="form-group">
+      <label class="label-title">8. RECIPIENTE DE MEDIÇÃO DA OBRA</label>
+      <select id="recipiente" onchange="atualizarInfoRecipiente(); calcular();">
+        <option value="padiola" selected>📦 Padiola Ergonomica NR-17 (C: 45 x L: 35 x A: 23 cm = 36,2L)</option>
+        <option value="lata">🛢️ Lata de Tinta Tradicional (18 Litros)</option>
+      </select>
+      <div id="infoRecipiente" class="card-box info-box">
+        📍 <strong>Padiola NR-17:</strong> Projetada ergonomicamente (C: 45 cm x L: 35 cm x A: 23 cm) para transporte por 2 operários. Limita o esforço individual a ~27 kg, em total conformidade com a Equação do NIOSH e segurança do trabalho.
+      </div>
+    </div>
+
+    <!-- Painel Gráfico da Curva de Abrams -->
+    <div class="abrams-card">
+      <div class="abrams-header">📈 Curva de Abrams (Relação Água/Cimento vs Resistência)</div>
+      <div class="abrams-svg-container">
+        <svg viewBox="0 0 360 170" width="100%" height="auto" style="display: block;">
+          <!-- Grid horizontal -->
+          <line x1="45" y1="20" x2="330" y2="20" stroke="#f1f5f9" stroke-width="1" />
+          <line x1="45" y1="55" x2="330" y2="55" stroke="#f1f5f9" stroke-width="1" />
+          <line x1="45" y1="90" x2="330" y2="90" stroke="#f1f5f9" stroke-width="1" />
+          <line x1="45" y1="125" x2="330" y2="125" stroke="#f1f5f9" stroke-width="1" />
+
+          <!-- Eixos -->
+          <line x1="45" y1="20" x2="45" y2="125" stroke="#94a3b8" stroke-width="1.5" />
+          <line x1="45" y1="125" x2="330" y2="125" stroke="#94a3b8" stroke-width="1.5" />
+
+          <!-- Rótulos Eixo Y (MPa) -->
+          <text x="40" y="24" font-size="9" fill="#64748b" text-anchor="end" font-weight="600">35 MPa</text>
+          <text x="40" y="59" font-size="9" fill="#64748b" text-anchor="end" font-weight="600">28 MPa</text>
+          <text x="40" y="94" font-size="9" fill="#64748b" text-anchor="end" font-weight="600">20 MPa</text>
+          <text x="40" y="129" font-size="9" fill="#64748b" text-anchor="end" font-weight="600">12 MPa</text>
+
+          <!-- Rótulos Eixo X (a/c) -->
+          <text x="45" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.30</text>
+          <text x="116" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.40</text>
+          <text x="187" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.50</text>
+          <text x="258" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.60</text>
+          <text x="330" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.70</text>
+
+          <text x="187" y="158" font-size="10" fill="#0369a1" text-anchor="middle" font-weight="700">Relação Água / Cimento (a/c)</text>
+
+          <!-- Curva teórica de Abrams -->
+          <path d="M 45 20 C 115 50, 200 95, 330 120" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- Ponto Dinâmico Vermelho -->
+          <circle id="abramsDot" cx="187" cy="90" r="6" fill="#ef4444" stroke="#ffffff" stroke-width="2">
+            <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite" />
+          </circle>
+          
+          <!-- Label flutuante do ponto -->
+          <text id="abramsDotLabel" x="187" y="78" font-size="10" fill="#dc2626" font-weight="800" text-anchor="middle">0.50</text>
+        </svg>
+      </div>
+      <div class="abrams-legend">
+        📊 <strong>Curva de Abrams:</strong> Mostra que quanto menor a relação água/cimento, maior é a resistência (MPa) alcançada pelo concreto.
+      </div>
+    </div>
+
+    <!-- Resultados -->
+    <div class="results-section">
+      <!-- Lista de Compras -->
+      <div class="result-block">
+        <div class="block-header">🛒 LISTA DE COMPRAS (DEPÓSITO)</div>
+        <div class="row-item">
+          <span class="row-label">Cimento Necessário:</span>
+          <span class="row-value" id="resCimentoSacos">0 sacos (0.0 exatos)</span>
+        </div>
+        <div class="row-item">
+          <span class="row-label">Areia Lavada:</span>
+          <span class="row-value" id="resAreiaVol">0.00 m³ (0 padiolas)</span>
+        </div>
+        <div class="row-item">
+          <span class="row-label">Brita / Seixo:</span>
+          <span class="row-value" id="resBritaVol">0.00 m³ (0 padiolas)</span>
+        </div>
+      </div>
+
+      <!-- Receita por 1 Saco -->
+      <div class="result-block">
+        <div class="block-header">📋 RECEITA POR 1 SACO DE CIMENTO (50KG)</div>
+        <div class="row-item">
+          <span class="row-label">Cimento:</span>
+          <span class="row-value">1 Saco (50 kg)</span>
+        </div>
+        <div class="row-item">
+          <span class="row-label" id="lblAreiaRecipiente">Areia (Padiolas):</span>
+          <span class="row-value" id="resAreiaProporcao">3.0 padiolas</span>
+        </div>
+        <div class="row-item">
+          <span class="row-label" id="lblBritaRecipiente">Brita/Seixo (Padiolas):</span>
+          <span class="row-value" id="resBritaProporcao">3.2 padiolas</span>
+        </div>
+        <div class="highlight-banner">
+          <span class="highlight-title">Água Limpa a Adicionar:</span>
+          <span class="highlight-val" id="resAguaLitros">25.1 Litros</span>
+        </div>
+      </div>
+
+      <!-- Traço Proporcional em Volume -->
+      <div class="result-block">
+        <div class="block-header">📐 TRAÇO PROPORCIONAL EM VOLUME</div>
+        <div class="traco-box">
+          <div class="traco-sub">Proporção (Cimento : Areia : Pedra):</div>
+          <div class="traco-val" id="resTracoExtenso">1 : 3.0 : 3.2</div>
+          <div class="traco-ac" id="resRelacaoAC">Relação Água/Cimento (Lei de Abrams): 0.50</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Resultados -->
-  <div class="results-section">
-    <!-- Lista de Compras -->
-    <div class="result-block">
-      <div class="block-header">🛒 LISTA DE COMPRAS (DEPÓSITO)</div>
-      <div class="row-item">
-        <span class="row-label">Cimento Necessário:</span>
-        <span class="row-value" id="resCimentoSacos">18 sacos (17.1 exatos)</span>
-      </div>
-      <div class="row-item">
-        <span class="row-label">Areia Lavada:</span>
-        <span class="row-value" id="resAreiaVol">1.87 m³ (52 padiolas)</span>
-      </div>
-      <div class="row-item">
-        <span class="row-label">Brita / Seixo:</span>
-        <span class="row-value" id="resBritaVol">1.96 m³ (54 padiolas)</span>
-      </div>
-    </div>
+  <script>
+    // Options mapping for aggregates
+    const opcoesAgregados = {
+      seixo_rolado: [
+        { text: 'Seixo Rolado (Padrão)', val: 'seixo_padrao' },
+        { text: 'Seixo Fino', val: 'seixo_fino' },
+        { text: 'Seixo Grosso', val: 'seixo_grosso' }
+      ],
+      brita: [
+        { text: 'Brita 1 (Padrão)', val: 'brita1' },
+        { text: 'Brita 0 (Pedrisco)', val: 'brita0' },
+        { text: 'Brita 2', val: 'brita2' }
+      ],
+      seixo_misto: [
+        { text: 'Seixo Misto Fino/Médio', val: 'seixo_misto_fm' },
+        { text: 'Seixo Misto Médio/Grosso', val: 'seixo_misto_mg' }
+      ]
+    };
 
-    <!-- Receita por 1 Saco -->
-    <div class="result-block">
-      <div class="block-header">📋 RECEITA POR 1 SACO DE CIMENTO (50KG)</div>
-      <div class="row-item">
-        <span class="row-label">Cimento:</span>
-        <span class="row-value">1 Saco (50 kg)</span>
-      </div>
-      <div class="row-item">
-        <span class="row-label" id="lblAreiaRecipiente">Areia (Padiolas):</span>
-        <span class="row-value" id="resAreiaProporcao">3.0 padiolas</span>
-      </div>
-      <div class="row-item">
-        <span class="row-label" id="lblBritaRecipiente">Brita/Seixo (Padiolas):</span>
-        <span class="row-value" id="resBritaProporcao">3.2 padiolas</span>
-      </div>
-      <div class="highlight-banner">
-        <span class="highlight-title">Água Limpa a Adicionar:</span>
-        <span class="highlight-val" id="resAguaLitros">25.1 Litros</span>
-      </div>
-    </div>
+    // Tips for Finalidades
+    const dicasFinalidade = {
+      '15': '💡 Concreto magro serve como camada cega/lastro para proteger as armaduras do contato direto com o solo.',
+      '20': '💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros para evitar fissuras por variação térmica.',
+      '25': '💡 Lajes, vigas, pilares e fundações exigem escoramento adequado, boa vibração e cura úmida por no mínimo 7 dias.',
+      '30': '💡 Estruturas de alta responsabilidade como muros de arrimo e pilares exigem adensamento rigoroso para evitar falhas.',
+      '35': '💡 Pisos industriais e de tráfego pesado exigem controle rigoroso da água e uso de juntas para suportar altas cargas.'
+    };
 
-    <!-- Traço Proporcional em Volume -->
-    <div class="result-block">
-      <div class="block-header">📐 TRAÇO PROPORCIONAL EM VOLUME</div>
-      <div class="traco-box">
-        <div class="traco-sub">Proporção (Cimento : Areia : Pedra):</div>
-        <div class="traco-val" id="resTracoExtenso">1 : 3.0 : 3.2</div>
-        <div class="traco-ac" id="resRelacaoAC">Relação Água/Cimento (Lei de Abrams): 0.50</div>
-      </div>
-    </div>
-  </div></div><script>
-  // Options mapping for aggregates
-  const opcoesAgregados = {
-    seixo_rolado: [
-      { text: 'Seixo Rolado (Padrão)', val: 'seixo_padrao' },
-      { text: 'Seixo Fino', val: 'seixo_fino' },
-      { text: 'Seixo Grosso', val: 'seixo_grosso' }
-    ],
-    brita: [
-      { text: 'Brita 1 (Padrão)', val: 'brita1' },
-      { text: 'Brita 0 (Pedrisco)', val: 'brita0' },
-      { text: 'Brita 2', val: 'brita2' }
-    ],
-    seixo_misto: [
-      { text: 'Seixo Misto Fino/Médio', val: 'seixo_misto_fm' },
-      { text: 'Seixo Misto Médio/Grosso', val: 'seixo_misto_mg' }
-    ]
-  };
+    function atualizarOpcoesAgregado() {
+      const tipo = document.getElementById('tipoAgregado').value;
+      const selectTam = document.getElementById('tamAgregado');
+      selectTam.innerHTML = '';
+      const lista = opcoesAgregados[tipo] || opcoesAgregados.seixo_rolado;
+      
+      lista.forEach((item, index) => {
+        const opt = document.createElement('option');
+        opt.value = item.val;
+        opt.textContent = item.text;
+        if (index === 0) {
+          opt.selected = true;
+        }
+        selectTam.appendChild(opt);
+      });
+    }
 
-  // Tips for Finalidades
-  const dicasFinalidade = {
-    '15': '💡 Concreto magro serve como camada cega/lastro para proteger as armaduras do contato direto com o solo.',
-    '20': '💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros para evitar fissuras por variação térmica.',
-    '25': '💡 Lajes, vigas, pilares e fundações exigem escoramento adequado, boa vibração e cura úmida por no mínimo 7 dias.',
-    '30': '💡 Estruturas de alta responsabilidade como muros de arrimo e pilares exigem adensamento rigoroso para evitar falhas.',
-    '35': '💡 Pisos industriais e de tráfego pesado exigem controle rigoroso da água e uso de juntas para suportar altas cargas.'
-  };
+    function atualizarDicaFinalidade() {
+      const fin = document.getElementById('finalidade').value;
+      const dicaBox = document.getElementById('dicaFinalidade');
+      dicaBox.innerHTML = dicasFinalidade[fin] || '💡 Certifique-se de realizar a cura úmida por pelo menos 7 dias.';
+    }
 
-  function atualizarOpcoesAgregado() {
-    const tipo = document.getElementById('tipoAgregado').value;
-    const selectTam = document.getElementById('tamAgregado');
-    selectTam.innerHTML = '';
-    const lista = opcoesAgregados[tipo] || opcoesAgregados.seixo_rolado;
-    
-    lista.forEach((item, index) => {
-      const opt = document.createElement('option');
-      opt.value = item.val;
-      opt.textContent = item.text;
-      if (index === 0) {
-        opt.selected = true;
+    function atualizarInfoRecipiente() {
+      const rec = document.getElementById('recipiente').value;
+      const infoBox = document.getElementById('infoRecipiente');
+      const lblAreia = document.getElementById('lblAreiaRecipiente');
+      const lblBrita = document.getElementById('lblBritaRecipiente');
+
+      if (rec === 'padiola') {
+        infoBox.innerHTML = '📍 <strong>Padiola NR-17:</strong> Projetada ergonomicamente (C: 45 cm x L: 35 cm x A: 23 cm) para transporte por 2 operários. Limita o esforço individual a ~27 kg, em total conformidade com a Equação do NIOSH e segurança do trabalho.';
+        lblAreia.textContent = 'Areia (Padiolas):';
+        lblBrita.textContent = 'Brita/Seixo (Padiolas):';
+      } else {
+        infoBox.innerHTML = '🛢️ <strong>Lata de Tinta (18L):</strong> Medição padrão por latas de 18 litros. Requer mais viagens manuais. Mantenha a postura ereta ao suspender o balde do chão.';
+        lblAreia.textContent = 'Areia (Latas 18L):';
+        lblBrita.textContent = 'Brita/Seixo (Latas 18L):';
       }
-      selectTam.appendChild(opt);
-    });
-  }
-
-  function atualizarDicaFinalidade() {
-    const fin = document.getElementById('finalidade').value;
-    const dicaBox = document.getElementById('dicaFinalidade');
-    dicaBox.innerHTML = dicasFinalidade[fin] || '💡 Certifique-se de realizar a cura úmida por pelo menos 7 dias.';
-  }
-
-  function atualizarInfoRecipiente() {
-    const rec = document.getElementById('recipiente').value;
-    const infoBox = document.getElementById('infoRecipiente');
-    const lblAreia = document.getElementById('lblAreiaRecipiente');
-    const lblBrita = document.getElementById('lblBritaRecipiente');
-
-    if (rec === 'padiola') {
-      infoBox.innerHTML = '📍 <strong>Padiola NR-17:</strong> Projetada ergonomicamente (C: 45 cm x L: 35 cm x A: 23 cm) para transporte por 2 operários. Limita o esforço individual a ~27 kg, em total conformidade com a Equação do NIOSH e segurança do trabalho.';
-      lblAreia.textContent = 'Areia (Padiolas):';
-      lblBrita.textContent = 'Brita/Seixo (Padiolas):';
-    } else {
-      infoBox.innerHTML = '🛢️ <strong>Lata de Tinta (18L):</strong> Medição padrão por latas de 18 litros. Requer mais viagens manuais. Mantenha a postura ereta ao suspender o balde do chão.';
-      lblAreia.textContent = 'Areia (Latas 18L):';
-      lblBrita.textContent = 'Brita/Seixo (Latas 18L):';
-    }
-  }
-
-  function atualizarFormatoCubagem() {
-    const modo = document.querySelector('input[name="formatoCubagem"]:checked')?.value || 'placa';
-    const cInput = document.getElementById('comp');
-    const lInput = document.getElementById('larg');
-    const eInput = document.getElementById('esp');
-
-    if (modo === 'placa') {
-      cInput.placeholder = 'Comprimento (m)';
-      lInput.placeholder = 'Largura (m)';
-      eInput.placeholder = 'Espessura (cm)';
-    } else {
-      cInput.placeholder = 'Comprimento / Altura (m)';
-      lInput.placeholder = 'Lado A da Fôrma (cm)';
-      eInput.placeholder = 'Lado B da Fôrma (cm)';
-    }
-    calcular();
-  }
-
-  function atualizarGraficoAbrams(relacionAC) {
-    const dot = document.getElementById('abramsDot');
-    const label = document.getElementById('abramsDotLabel');
-    if (!dot || !label) return;
-
-    // Clamping a/c between 0.30 and 0.70 for SVG visualization range
-    const acClamped = Math.max(0.30, Math.min(0.70, relacionAC));
-    
-    // Bounds on SVG layout
-    const xMin = 45, xMax = 330;
-    const yMin = 20, yMax = 120;
-    
-    // Calculate normalized position (0 to 1)
-    const normX = (acClamped - 0.30) / (0.70 - 0.30);
-    const cx = xMin + normX * (xMax - xMin);
-
-    // Exponential curve interpolation matching SVG path
-    const normY = Math.pow(normX, 0.75);
-    const cy = yMin + normY * (yMax - yMin);
-
-    dot.setAttribute('cx', cx.toFixed(1));
-    dot.setAttribute('cy', cy.toFixed(1));
-
-    label.setAttribute('x', cx.toFixed(1));
-    label.setAttribute('y', (cy - 12).toFixed(1));
-    label.textContent = `a/c ${relacionAC.toFixed(2)}`;
-  }
-
-  function calcular() {
-    // Read input dimensions
-    const val1 = parseFloat(document.getElementById('comp').value) || 0;
-    const val2 = parseFloat(document.getElementById('larg').value) || 0;
-    const val3 = parseFloat(document.getElementById('esp').value) || 0;
-    const margem = parseFloat(document.getElementById('margemPerda').value) || 0.10;
-
-    const modo = document.querySelector('input[name="formatoCubagem"]:checked')?.value || 'placa';
-
-    let volumeBruto = 0;
-    if (modo === 'placa') {
-      volumeBruto = val1 * val2 * (val3 / 100);
-    } else {
-      volumeBruto = val1 * (val2 / 100) * (val3 / 100);
     }
 
-    const volComPerda = volumeBruto * (1 + margem);
+    function atualizarFormatoCubagem() {
+      const modo = document.querySelector('input[name="formatoCubagem"]:checked')?.value || 'placa';
+      const lblComp = document.getElementById('lblComp');
+      const lblLarg = document.getElementById('lblLarg');
+      const lblEsp = document.getElementById('lblEsp');
 
-    document.getElementById('volResult').value = volComPerda > 0 ? `${volComPerda.toFixed(2)} m³` : '0.00 m³';
-
-    // FCK target
-    const finVal = document.getElementById('finalidade').value;
-    let fck = 20;
-    if (finVal.startsWith('15')) fck = 15;
-    else if (finVal.startsWith('20')) fck = 20;
-    else if (finVal.startsWith('25')) fck = 25;
-    else if (finVal.startsWith('30')) fck = 30;
-    else if (finVal.startsWith('35')) fck = 35;
-
-    // Cimento & Aditivo Water-Cement Ratio (a/c)
-    let relacionAC = 0.50;
-    if (fck === 15) relacionAC = 0.65;
-    else if (fck === 20) relacionAC = 0.50;
-    else if (fck === 25) relacionAC = 0.45;
-    else if (fck === 30) relacionAC = 0.40;
-    else if (fck === 35) relacionAC = 0.35;
-
-    const aditivo = document.getElementById('aditivo').value;
-    if (aditivo === 'plastificante') {
-      relacionAC = relacionAC * 0.90; // 10% water reduction
+      if (modo === 'placa') {
+        lblComp.textContent = 'Comp. (m)';
+        lblLarg.textContent = 'Largura (m)';
+        lblEsp.textContent = 'Espessura (cm)';
+      } else {
+        lblComp.textContent = 'Altura (m)';
+        lblLarg.textContent = 'Lado A (cm)';
+        lblEsp.textContent = 'Lado B (cm)';
+      }
+      calcular();
     }
 
-    // Update dynamic graph dot position
-    atualizarGraficoAbrams(relacionAC);
+    function atualizarGraficoAbrams(relacionAC) {
+      const dot = document.getElementById('abramsDot');
+      const label = document.getElementById('abramsDotLabel');
+      if (!dot || !label) return;
 
-    // Proportions (Cimento : Areia : Pedra)
-    let propAreia = 3.0;
-    let propBrita = 3.2;
+      // Clamping a/c between 0.30 and 0.70 for SVG visualization range
+      const acClamped = Math.max(0.30, Math.min(0.70, relacionAC));
+      
+      // Bounds on SVG layout
+      const xMin = 45, xMax = 330;
+      const yMin = 20, yMax = 120;
+      
+      // Calculate normalized position (0 to 1)
+      const normX = (acClamped - 0.30) / (0.70 - 0.30);
+      const cx = xMin + normX * (xMax - xMin);
 
-    if (fck === 15) { propAreia = 3.8; propBrita = 4.2; }
-    else if (fck === 20) { propAreia = 3.0; propBrita = 3.2; }
-    else if (fck === 25) { propAreia = 2.3; propBrita = 2.7; }
-    else if (fck === 30) { propAreia = 1.8; propBrita = 2.2; }
-    else if (fck === 35) { propAreia = 1.4; propBrita = 1.8; }
+      // Exponential curve interpolation matching SVG path
+      const normY = Math.pow(normX, 0.75);
+      const cy = yMin + normY * (yMax - yMin);
 
-    // Aggregate adjustments
-    const tipoAgregado = document.getElementById('tipoAgregado').value;
-    if (tipoAgregado === 'brita') {
-      propBrita -= 0.1;
+      dot.setAttribute('cx', cx.toFixed(1));
+      dot.setAttribute('cy', cy.toFixed(1));
+
+      label.setAttribute('x', cx.toFixed(1));
+      label.setAttribute('y', (cy - 12).toFixed(1));
+      label.textContent = `a/c ${relacionAC.toFixed(2)}`;
     }
 
-    // Water volume per 50kg bag
-    let aguaPorSaco = 50 * relacionAC; // Liters
+    function calcular() {
+      // Read input dimensions
+      const val1 = parseFloat(document.getElementById('comp').value) || 0;
+      const val2 = parseFloat(document.getElementById('larg').value) || 0;
+      const val3 = parseFloat(document.getElementById('esp').value) || 0;
+      const margem = parseFloat(document.getElementById('margemPerda').value) || 0.10;
 
-    // Moisture adjustment
-    const estAreia = document.getElementById('estadoAreia').value;
-    if (estAreia === 'umida') {
-      aguaPorSaco -= 1.4;
-    } else if (estAreia === 'encharcada') {
-      aguaPorSaco -= 3.2;
+      const modo = document.querySelector('input[name="formatoCubagem"]:checked')?.value || 'placa';
+
+      let volumeBruto = 0;
+      if (modo === 'placa') {
+        volumeBruto = val1 * val2 * (val3 / 100);
+      } else {
+        volumeBruto = val1 * (val2 / 100) * (val3 / 100);
+      }
+
+      const volComPerda = volumeBruto * (1 + margem);
+
+      document.getElementById('volResult').value = volComPerda > 0 ? `${volComPerda.toFixed(2)} m³` : '0.00 m³';
+
+      // FCK target
+      const finVal = document.getElementById('finalidade').value;
+      let fck = 20;
+      if (finVal.startsWith('15')) fck = 15;
+      else if (finVal.startsWith('20')) fck = 20;
+      else if (finVal.startsWith('25')) fck = 25;
+      else if (finVal.startsWith('30')) fck = 30;
+      else if (finVal.startsWith('35')) fck = 35;
+
+      // Cimento & Aditivo Water-Cement Ratio (a/c)
+      let relacionAC = 0.50;
+      if (fck === 15) relacionAC = 0.65;
+      else if (fck === 20) relacionAC = 0.50;
+      else if (fck === 25) relacionAC = 0.45;
+      else if (fck === 30) relacionAC = 0.40;
+      else if (fck === 35) relacionAC = 0.35;
+
+      const aditivo = document.getElementById('aditivo').value;
+      if (aditivo === 'plastificante') {
+        relacionAC = relacionAC * 0.90; // 10% water reduction
+      }
+
+      // Update dynamic graph dot position
+      atualizarGraficoAbrams(relacionAC);
+
+      // Proportions (Cimento : Areia : Pedra)
+      let propAreia = 3.0;
+      let propBrita = 3.2;
+
+      if (fck === 15) { propAreia = 3.8; propBrita = 4.2; }
+      else if (fck === 20) { propAreia = 3.0; propBrita = 3.2; }
+      else if (fck === 25) { propAreia = 2.3; propBrita = 2.7; }
+      else if (fck === 30) { propAreia = 1.8; propBrita = 2.2; }
+      else if (fck === 35) { propAreia = 1.4; propBrita = 1.8; }
+
+      // Aggregate adjustments
+      const tipoAgregado = document.getElementById('tipoAgregado').value;
+      if (tipoAgregado === 'brita') {
+        propBrita -= 0.1;
+      }
+
+      // Water volume per 50kg bag
+      let aguaPorSaco = 50 * relacionAC; // Liters
+
+      // Moisture adjustment
+      const estAreia = document.getElementById('estadoAreia').value;
+      if (estAreia === 'umida') {
+        aguaPorSaco -= 1.4;
+      } else if (estAreia === 'encharcada') {
+        aguaPorSaco -= 3.2;
+      }
+
+      // Recipient capacity
+      const rec = document.getElementById('recipiente').value;
+      const volRecipienteL = (rec === 'padiola') ? 36.2 : 18.0;
+
+      // Calculations for purchasing
+      const consumoCimentoTotalKg = volComPerda * (fck === 15 ? 280 : fck === 20 ? 335 : fck === 25 ? 380 : fck === 30 ? 420 : 460);
+      const sacosExatos = consumoCimentoTotalKg / 50;
+      const sacosArredondados = Math.ceil(sacosExatos);
+
+      // Total aggregate volumes (m³)
+      const volAreiaTotalM3 = (sacosExatos * propAreia * volRecipienteL) / 1000;
+      const volBritaTotalM3 = (sacosExatos * propBrita * volRecipienteL) / 1000;
+
+      // Total recipients count
+      const numPadiolasAreiaTotal = Math.round((volAreiaTotalM3 * 1000) / volRecipienteL);
+      const numPadiolasBritaTotal = Math.round((volBritaTotalM3 * 1000) / volRecipienteL);
+
+      // Recipient unit name
+      const nomeUnidade = (rec === 'padiola') ? 'padiolas' : 'latas';
+
+      // Render Results
+      if (volComPerda <= 0) {
+        document.getElementById('resCimentoSacos').textContent = '0 sacos (0.0 exatos)';
+        document.getElementById('resAreiaVol').textContent = `0.00 m³ (0 ${nomeUnidade})`;
+        document.getElementById('resBritaVol').textContent = `0.00 m³ (0 ${nomeUnidade})`;
+      } else {
+        document.getElementById('resCimentoSacos').textContent = `${sacosArredondados} sacos (${sacosExatos.toFixed(1)} exatos)`;
+        document.getElementById('resAreiaVol').textContent = `${volAreiaTotalM3.toFixed(2)} m³ (${numPadiolasAreiaTotal} ${nomeUnidade})`;
+        document.getElementById('resBritaVol').textContent = `${volBritaTotalM3.toFixed(2)} m³ (${numPadiolasBritaTotal} ${nomeUnidade})`;
+      }
+
+      document.getElementById('resAreiaProporcao').textContent = `${propAreia.toFixed(1)} ${nomeUnidade}`;
+      document.getElementById('resBritaProporcao').textContent = `${propBrita.toFixed(1)} ${nomeUnidade}`;
+      document.getElementById('resAguaLitros').textContent = `${aguaPorSaco.toFixed(1)} Litros`;
+
+      document.getElementById('resTracoExtenso').textContent = `1 : ${propAreia.toFixed(1)} : ${propBrita.toFixed(1)}`;
+      document.getElementById('resRelacaoAC').textContent = `Relação Água/Cimento (Lei de Abrams): ${relacionAC.toFixed(2)}`;
     }
 
-    // Recipient capacity
-    const rec = document.getElementById('recipiente').value;
-    const volRecipienteL = (rec === 'padiola') ? 36.2 : 18.0;
-
-    // Calculations for purchasing
-    const consumoCimentoTotalKg = volComPerda * (fck === 15 ? 280 : fck === 20 ? 335 : fck === 25 ? 380 : fck === 30 ? 420 : 460);
-    const sacosExatos = consumoCimentoTotalKg / 50;
-    const sacosArredondados = Math.ceil(sacosExatos);
-
-    // Total aggregate volumes (m³)
-    const volAreiaTotalM3 = (sacosExatos * propAreia * volRecipienteL) / 1000;
-    const volBritaTotalM3 = (sacosExatos * propBrita * volRecipienteL) / 1000;
-
-    // Total recipients count
-    const numPadiolasAreiaTotal = Math.round((volAreiaTotalM3 * 1000) / volRecipienteL);
-    const numPadiolasBritaTotal = Math.round((volBritaTotalM3 * 1000) / volRecipienteL);
-
-    // Recipient unit name
-    const nomeUnidade = (rec === 'padiola') ? 'padiolas' : 'latas';
-
-    // Render Results
-    if (volComPerda <= 0) {
-      document.getElementById('resCimentoSacos').textContent = '0 sacos (0.0 exatos)';
-      document.getElementById('resAreiaVol').textContent = `0.00 m³ (0 ${nomeUnidade})`;
-      document.getElementById('resBritaVol').textContent = `0.00 m³ (0 ${nomeUnidade})`;
-    } else {
-      document.getElementById('resCimentoSacos').textContent = `${sacosArredondados} sacos (${sacosExatos.toFixed(1)} exatos)`;
-      document.getElementById('resAreiaVol').textContent = `${volAreiaTotalM3.toFixed(2)} m³ (${numPadiolasAreiaTotal} ${nomeUnidade})`;
-      document.getElementById('resBritaVol').textContent = `${volBritaTotalM3.toFixed(2)} m³ (${numPadiolasBritaTotal} ${nomeUnidade})`;
-    }
-
-    document.getElementById('resAreiaProporcao').textContent = `${propAreia.toFixed(1)} ${nomeUnidade}`;
-    document.getElementById('resBritaProporcao').textContent = `${propBrita.toFixed(1)} ${nomeUnidade}`;
-    document.getElementById('resAguaLitros').textContent = `${aguaPorSaco.toFixed(1)} Litros`;
-
-    document.getElementById('resTracoExtenso').textContent = `1 : ${propAreia.toFixed(1)} : ${propBrita.toFixed(1)}`;
-    document.getElementById('resRelacaoAC').textContent = `Relação Água/Cimento (Lei de Abrams): ${relacionAC.toFixed(2)}`;
-  }
-
-  // Initial setup
-  window.onload = function() {
-    atualizarOpcoesAgregado();
-    atualizarDicaFinalidade();
-    atualizarInfoRecipiente();
-    atualizarFormatoCubagem();
-  };</script></body></html>
+    // Initial setup
+    window.onload = function() {
+      atualizarOpcoesAgregado();
+      atualizarDicaFinalidade();
+      atualizarInfoRecipiente();
+      atualizarFormatoCubagem();
+    };
+  </script>
+</body>
+</html>
