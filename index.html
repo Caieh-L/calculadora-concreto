@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dosagem Científica - NBR 12655 / Lei de Abrams / NR-17</title>
+  <title>Calculadora Dosagem Científica - NBR 12655 / Lei de Abrams / NR-17</title>
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #0b1329 0%, #172a45 100%);
@@ -162,24 +162,43 @@
       font-weight: 600;
     }
 
-    .btn-calc {
-      width: 100%;
-      padding: 13px;
-      background-color: var(--primary);
-      color: white;
-      font-size: 0.98rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
-      transition: all 0.2s ease;
+    /* Painel Gráfico da Curva de Abrams */
+    .abrams-card {
+      background-color: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 12px;
       margin: 18px 0;
     }
 
-    .btn-calc:hover {
-      background-color: var(--primary-hover);
-      transform: translateY(-1px);
+    .abrams-header {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--primary-hover);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .abrams-svg-container {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 8px;
+    }
+
+    .abrams-legend {
+      font-size: 0.74rem;
+      color: var(--muted-text);
+      margin-top: 10px;
+      line-height: 1.4;
+      background: #ffffff;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
     }
 
     .results-section {
@@ -290,7 +309,7 @@
 <div class="container">
   <!-- Header -->
   <div class="header">
-    <div class="header-title">📊 Dosagem Científica</div>
+    <div class="header-title">📊 Calculadora Dosagem Científica</div>
     <div class="header-subtitle">PADRÃO NBR 12655 / LEI DE ABRAMS / NR-17</div>
   </div>
 
@@ -401,8 +420,52 @@
     </div>
   </div>
 
-  <!-- Botão de Ação -->
-  <button class="btn-calc" onclick="calcular();">Calcular Traço Assertivo</button>
+  <!-- Painel Gráfico da Curva de Abrams -->
+  <div class="abrams-card">
+    <div class="abrams-header">📈 Curva de Abrams (Relação Água/Cimento vs Resistência)</div>
+    <div class="abrams-svg-container">
+      <svg viewBox="0 0 360 170" width="100%" height="auto" style="display: block;">
+        <!-- Grid horizontal -->
+        <line x1="45" y1="20" x2="330" y2="20" stroke="#f1f5f9" stroke-width="1" />
+        <line x1="45" y1="55" x2="330" y2="55" stroke="#f1f5f9" stroke-width="1" />
+        <line x1="45" y1="90" x2="330" y2="90" stroke="#f1f5f9" stroke-width="1" />
+        <line x1="45" y1="125" x2="330" y2="125" stroke="#f1f5f9" stroke-width="1" />
+
+        <!-- Eixos -->
+        <line x1="45" y1="20" x2="45" y2="125" stroke="#94a3b8" stroke-width="1.5" />
+        <line x1="45" y1="125" x2="330" y2="125" stroke="#94a3b8" stroke-width="1.5" />
+
+        <!-- Rótulos Eixo Y (MPa) -->
+        <text x="40" y="24" font-size="9" fill="#64748b" text-anchor="end" font-weight="600">35 MPa</text>
+        <text x="40" y="59" font-size="9" fill="#64748b" text-anchor="end" font-weight="600">28 MPa</text>
+        <text x="40" y="94" font-size="9" fill="#64748b" text-anchor="end" font-weight="600">20 MPa</text>
+        <text x="40" y="129" font-size="9" fill="#64748b" text-anchor="end" font-weight="600">12 MPa</text>
+
+        <!-- Rótulos Eixo X (a/c) -->
+        <text x="45" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.30</text>
+        <text x="116" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.40</text>
+        <text x="187" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.50</text>
+        <text x="258" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.60</text>
+        <text x="330" y="142" font-size="9" fill="#64748b" text-anchor="middle" font-weight="600">0.70</text>
+
+        <text x="187" y="158" font-size="10" fill="#0369a1" text-anchor="middle" font-weight="700">Relação Água / Cimento (a/c)</text>
+
+        <!-- Curva teórica de Abrams -->
+        <path d="M 45 20 C 115 50, 200 95, 330 120" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round"/>
+
+        <!-- Ponto Dinâmico Vermelho -->
+        <circle id="abramsDot" cx="187" cy="90" r="6" fill="#ef4444" stroke="#ffffff" stroke-width="2">
+          <animate attributeName="r" values="6;8;6" dur="2s" repeatCount="indefinite" />
+        </circle>
+        
+        <!-- Label flutuante do ponto -->
+        <text id="abramsDotLabel" x="187" y="78" font-size="10" fill="#dc2626" font-weight="800" text-anchor="middle">0.50</text>
+      </svg>
+    </div>
+    <div class="abrams-legend">
+      📊 <strong>Curva de Abrams:</strong> Mostra que quanto menor a relação água/cimento, maior é a resistência (MPa) alcançada pelo concreto.
+    </div>
+  </div>
 
   <!-- Resultados -->
   <div class="results-section">
@@ -524,6 +587,34 @@
     }
   }
 
+  function atualizarGraficoAbrams(relacionAC) {
+    const dot = document.getElementById('abramsDot');
+    const label = document.getElementById('abramsDotLabel');
+    if (!dot || !label) return;
+
+    // Clamping a/c between 0.30 and 0.70 for SVG visualization range
+    const acClamped = Math.max(0.30, Math.min(0.70, relacionAC));
+    
+    // Bounds on SVG layout
+    const xMin = 45, xMax = 330;
+    const yMin = 20, yMax = 120;
+    
+    // Calculate normalized position (0 to 1)
+    const normX = (acClamped - 0.30) / (0.70 - 0.30);
+    const cx = xMin + normX * (xMax - xMin);
+
+    // Exponential curve interpolation matching SVG path
+    const normY = Math.pow(normX, 0.75);
+    const cy = yMin + normY * (yMax - yMin);
+
+    dot.setAttribute('cx', cx.toFixed(1));
+    dot.setAttribute('cy', cy.toFixed(1));
+
+    label.setAttribute('x', cx.toFixed(1));
+    label.setAttribute('y', (cy - 12).toFixed(1));
+    label.textContent = `a/c ${relacionAC.toFixed(2)}`;
+  }
+
   function calcular() {
     // Read input dimensions
     const c = parseFloat(document.getElementById('comp').value) || 0;
@@ -557,6 +648,9 @@
     if (aditivo === 'plastificante') {
       relacionAC = relacionAC * 0.90; // 10% water reduction
     }
+
+    // Update dynamic graph dot position
+    atualizarGraficoAbrams(relacionAC);
 
     // Proportions (Cimento : Areia : Pedra)
     let propAreia = 3.0;
