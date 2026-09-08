@@ -394,11 +394,11 @@
   <div class="form-group">
     <label class="label-title">8. RECIPIENTE DE MEDIÇÃO DA OBRA</label>
     <select id="recipiente" onchange="atualizarInfoRecipiente(); calcular();">
-      <option value="padiola" selected>📦 Padiola Ergonomica NR-17 (45 x 35 x 23 cm = 36,2L)</option>
-      <option value="lata">🪣 Lata de Tinta Tradicional (18 Litros)</option>
+      <option value="padiola" selected>📦 Padiola Ergonomica NR-17 (C: 45 x L: 35 x A: 23 cm = 36,2L)</option>
+      <option value="lata">🛢️ Lata de Tinta Tradicional (18 Litros)</option>
     </select>
     <div id="infoRecipiente" class="card-box info-box">
-      📍 <strong>Padiola NR-17:</strong> Projetada ergonomicamente (C: 45cm x L: 35cm x A: 23cm) para transporte por 2 operários. Limita o esforço individual a ~27 kg, em total conformidade com a Equação do NIOSH e segurança do trabalho.
+      📍 <strong>Padiola NR-17:</strong> Projetada ergonomicamente (C: 45 cm x L: 35 cm x A: 23 cm) para transporte por 2 operários. Limita o effort individual a ~27 kg, em total conformidade com a Equação do NIOSH e segurança do trabalho.
     </div>
   </div>
 
@@ -517,11 +517,11 @@
     const lblBrita = document.getElementById('lblBritaRecipiente');
 
     if (rec === 'padiola') {
-      infoBox.innerHTML = '📍 <strong>Padiola NR-17:</strong> Projetada ergonomicamente (45x35x23 cm) para transporte por 2 operários. Limita o esforço individual a ~27 kg, em total conformidade com a Equação do NIOSH e segurança do trabalho.';
+      infoBox.innerHTML = '📍 <strong>Padiola NR-17:</strong> Projetada ergonomicamente (C: 45 cm x L: 35 cm x A: 23 cm) para transporte por 2 operários. Limita o esforço individual a ~27 kg, em total conformidade com a Equação do NIOSH e segurança do trabalho.';
       lblAreia.textContent = 'Areia (Padiolas):';
       lblBrita.textContent = 'Brita/Seixo (Padiolas):';
     } else {
-      infoBox.innerHTML = '🪣 <strong>Lata de Tinta (18L):</strong> Medição padrão por latas de 18 litros. Requer mais viagens manuais. Mantenha a postura ereta ao suspender o balde do chão.';
+      infoBox.innerHTML = '🛢️ <strong>Lata de Tinta (18L):</strong> Medição padrão por latas de 18 litros. Requer mais viagens manuais. Mantenha a postura ereta ao suspender o balde do chão.';
       lblAreia.textContent = 'Areia (Latas 18L):';
       lblBrita.textContent = 'Brita/Seixo (Latas 18L):';
     }
