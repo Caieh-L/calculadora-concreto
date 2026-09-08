@@ -1,3 +1,4 @@
+HTML
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -302,11 +303,9 @@
     <select id="finalidade" onchange="atualizarDicaFinalidade(); calcular();">
       <option value="15">Concreto Magro / Lastro de Proteção (15MPa)</option>
       <option value="20" selected>Calçadas de Pedestre e Pisos de Quintal (20MPa)</option>
-      <option value="25_rampa">Rampa de Garagem / Calçada de Carro (25MPa)</option>
-      <option value="25_laje">Lajes Comuns e Vigas Aéreas (25MPa)</option>
-      <option value="25_funda">Vigas de Fundação / Baldrames e Blocos (25MPa)</option>
-      <option value="30_pilar">Pilares e Paredes de Concreto Estrutural (30MPa)</option>
-      <option value="30_arrimo">Muros de Arrimo e Contenções de Terra (30MPa)</option>
+      <option value="25">Vigas, Lajes, Pilares e Fundações Residenciais (25MPa)</option>
+      <option value="30">Pilares de Prédios, Muros de Arrimo e Contenções (30MPa)</option>
+      <option value="35">Pisos Industriais, Postos de Combustível e Tráfego Pesado (35MPa)</option>
     </select>
     <div id="dicaFinalidade" class="card-box warning-box">
       💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros para evitar fissuras por variação térmica.
@@ -398,7 +397,7 @@
       <option value="lata">🛢️ Lata de Tinta Tradicional (18 Litros)</option>
     </select>
     <div id="infoRecipiente" class="card-box info-box">
-      📍 <strong>Padiola NR-17:</strong> Projetada ergonomicamente (C: 45 cm x L: 35 cm x A: 23 cm) para transporte por 2 operários. Limita o effort individual a ~27 kg, em total conformidade com a Equação do NIOSH e segurança do trabalho.
+      📍 <strong>Padiola NR-17:</strong> Projetada ergonomicamente (C: 45 cm x L: 35 cm x A: 23 cm) para transporte por 2 operários. Limita o esforço individual a ~27 kg, em total conformidade com a Equação do NIOSH e segurança do trabalho.
     </div>
   </div>
 
@@ -480,11 +479,9 @@
   const dicasFinalidade = {
     '15': '💡 Concreto magro serve como camada cega/lastro para proteger as armaduras do contato direto com o solo.',
     '20': '💡 Calçadas e quintais exigem juntas de dilatação a cada 2 metros para evitar fissuras por variação térmica.',
-    '25_rampa': '💡 Rampas veiculares exigem acabamento ranhurado para tração pneumática antiderrapante.',
-    '25_laje': '💡 Lajes e vigas aéreas requerem escoramento adequado mantido até o período mínimo de cura NBR 14931.',
-    '25_funda': '💡 Vigas de fundação e baldrames necessitam de impermeabilização prévia para evitar umidade ascendente.',
-    '30_pilar': '💡 Pilares e paredes de concreto exigem adensamento rigoroso com vibrador para evitar brocas.',
-    '30_arrimo': '💡 Muros de arrimo devem possuir sistema de drenagem (barbacãs) para aliviar a pressão hidrostática.'
+    '25': '💡 Lajes, vigas, pilares e fundações exigem escoramento adequado, boa vibração e cura úmida por no mínimo 7 dias.',
+    '30': '💡 Estruturas de alta responsabilidade como muros de arrimo e pilares exigem adensamento rigoroso para evitar falhas.',
+    '35': '💡 Pisos industriais e de tráfego pesado exigem controle rigoroso da água e uso de juntas para suportar altas cargas.'
   };
 
   function atualizarOpcoesAgregado() {
@@ -546,6 +543,7 @@
     else if (finVal.startsWith('20')) fck = 20;
     else if (finVal.startsWith('25')) fck = 25;
     else if (finVal.startsWith('30')) fck = 30;
+    else if (finVal.startsWith('35')) fck = 35;
 
     // Cimento & Aditivo Water-Cement Ratio (a/c)
     let relacionAC = 0.50;
@@ -553,6 +551,7 @@
     else if (fck === 20) relacionAC = 0.50;
     else if (fck === 25) relacionAC = 0.45;
     else if (fck === 30) relacionAC = 0.40;
+    else if (fck === 35) relacionAC = 0.35;
 
     const aditivo = document.getElementById('aditivo').value;
     if (aditivo === 'plastificante') {
@@ -567,6 +566,7 @@
     else if (fck === 20) { propAreia = 3.0; propBrita = 3.2; }
     else if (fck === 25) { propAreia = 2.3; propBrita = 2.7; }
     else if (fck === 30) { propAreia = 1.8; propBrita = 2.2; }
+    else if (fck === 35) { propAreia = 1.4; propBrita = 1.8; }
 
     // Aggregate adjustments
     const tipoAgregado = document.getElementById('tipoAgregado').value;
@@ -590,7 +590,7 @@
     const volRecipienteL = (rec === 'padiola') ? 36.2 : 18.0;
 
     // Calculations for purchasing
-    const consumoCimentoTotalKg = volComPerda * (fck === 15 ? 280 : fck === 20 ? 335 : fck === 25 ? 380 : 420);
+    const consumoCimentoTotalKg = volComPerda * (fck === 15 ? 280 : fck === 20 ? 335 : fck === 25 ? 380 : fck === 30 ? 420 : 460);
     const sacosExatos = consumoCimentoTotalKg / 50;
     const sacosArredondados = Math.ceil(sacosExatos);
 
