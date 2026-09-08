@@ -162,6 +162,34 @@
       font-weight: 600;
     }
 
+    .format-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 10px;
+      background: #ffffff;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .format-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+    }
+
+    .format-option input[type="radio"] {
+      width: auto;
+      margin: 0;
+      cursor: pointer;
+      accent-color: var(--primary);
+    }
+
     /* Painel Gráfico da Curva de Abrams */
     .abrams-card {
       background-color: #f8fafc;
@@ -381,10 +409,23 @@
     <label class="label-title">6. CALCULADORA DE CUBAGEM</label>
     <div class="cubagem-card">
       <div class="cubagem-title">Calcular volume pelas medidas da peça:</div>
+      
+      <!-- Seletor de Formato -->
+      <div class="format-selector">
+        <label class="format-option">
+          <input type="radio" name="formatoCubagem" value="placa" checked onchange="atualizarFormatoCubagem();">
+          <span>Placa (Lajes, Pisos, Calçadas)</span>
+        </label>
+        <label class="format-option">
+          <input type="radio" name="formatoCubagem" value="barra" onchange="atualizarFormatoCubagem();">
+          <span>Barra (Pilares, Colunas, Vigas)</span>
+        </label>
+      </div>
+
       <div class="grid-3" style="margin-bottom: 8px;">
-        <input type="number" id="comp" placeholder="Comp (m)" value="10" step="0.1" oninput="calcular();">
-        <input type="number" id="larg" placeholder="Larg (m)" value="5" step="0.1" oninput="calcular();">
-        <input type="number" id="esp" placeholder="Esp (cm)" value="5" step="0.5" oninput="calcular();">
+        <input type="number" id="comp" placeholder="Comprimento (m)" value="10" step="0.1" oninput="calcular();">
+        <input type="number" id="larg" placeholder="Largura (m)" value="5" step="0.1" oninput="calcular();">
+        <input type="number" id="esp" placeholder="Espessura (cm)" value="5" step="0.5" oninput="calcular();">
       </div>
       <div class="grid-2">
         <input type="text" id="volResult" value="2.75 m³" readonly>
@@ -587,6 +628,24 @@
     }
   }
 
+  function atualizarFormatoCubagem() {
+    const modo = document.querySelector('input[name="formatoCubagem"]:checked')?.value || 'placa';
+    const cInput = document.getElementById('comp');
+    const lInput = document.getElementById('larg');
+    const eInput = document.getElementById('esp');
+
+    if (modo === 'placa') {
+      cInput.placeholder = 'Comprimento (m)';
+      lInput.placeholder = 'Largura (m)';
+      eInput.placeholder = 'Espessura (cm)';
+    } else {
+      cInput.placeholder = 'Comprimento / Altura (m)';
+      lInput.placeholder = 'Lado A da Fôrma (cm)';
+      eInput.placeholder = 'Lado B da Fôrma (cm)';
+    }
+    calcular();
+  }
+
   function atualizarGraficoAbrams(relacionAC) {
     const dot = document.getElementById('abramsDot');
     const label = document.getElementById('abramsDotLabel');
@@ -617,13 +676,21 @@
 
   function calcular() {
     // Read input dimensions
-    const c = parseFloat(document.getElementById('comp').value) || 0;
-    const l = parseFloat(document.getElementById('larg').value) || 0;
-    const e = parseFloat(document.getElementById('esp').value) || 0;
+    const val1 = parseFloat(document.getElementById('comp').value) || 0;
+    const val2 = parseFloat(document.getElementById('larg').value) || 0;
+    const val3 = parseFloat(document.getElementById('esp').value) || 0;
     const margem = parseFloat(document.getElementById('margemPerda').value) || 0.10;
 
-    const volBase = c * l * (e / 100);
-    const volComPerda = volBase * (1 + margem);
+    const modo = document.querySelector('input[name="formatoCubagem"]:checked')?.value || 'placa';
+
+    let volumeBruto = 0;
+    if (modo === 'placa') {
+      volumeBruto = val1 * val2 * (val3 / 100);
+    } else {
+      volumeBruto = val1 * (val2 / 100) * (val3 / 100);
+    }
+
+    const volComPerda = volumeBruto * (1 + margem);
 
     document.getElementById('volResult').value = volComPerda > 0 ? `${volComPerda.toFixed(2)} m³` : '0.00 m³';
 
@@ -723,7 +790,7 @@
     atualizarOpcoesAgregado();
     atualizarDicaFinalidade();
     atualizarInfoRecipiente();
-    calcular();
+    atualizarFormatoCubagem();
   };
 </script>
 
